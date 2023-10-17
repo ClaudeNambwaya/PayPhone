@@ -1,0 +1,363 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="~/assets/static/css/pretty-checkbox.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/dataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/dataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/parsley/src/parsley.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/uploader/css/jquery.dm-uploader.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/uploader/css/style.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa-solid fa-users"></i> SHERIA <small> CLIENT ONBOARDING</small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("Onboard", "ClientManagement")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Afya Msingi </h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form data-parsley-validate="true" name="form-wizard">
+                    <div id="wizard">
+                        <ol>
+                            <li>
+                                Client Details
+                                <small></small>
+                            </li>
+                            <li>
+                                Uploads
+                                <small> </small>
+                            </li>
+                            <li>
+                                Confirm Details
+                                <small></small>
+                            </li>
+                            <li>
+                                Summary
+                                <small></small>
+                            </li>
+                        </ol>
+                        <!-- begin wizard step-1 -->
+                        <div class="wizard-step-1">
+                            <fieldset>
+                                <legend class="pull-left width-full">Maintain Client Persornal Information</legend>
+                                <div id="#" style="display: block">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <input id="applicantrecordid" type="hidden" name="applicantrecordid" />
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="client_type">Client Type</label>
+                                                <select id="client_type" name="client_type" class="form-control">
+                                                    <option value="">Select Type</option>
+                                                    <option value="Individual">Individual</option>
+                                                    <option value="Company">Company</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="client_name">Client Name</label>
+                                                <input id="client_name" type="text" name="client_name" class="form-control" data-parsley-group="wizard-step-1" />
+                                                <span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="client_name"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="phone_number">Phone Number</label>
+                                                <input id="phone_number" type="text" name="phone_number" class="form-control" data-parsley-group="wizard-step-1" />
+                                                <span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="phone_number"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="email">Email Address</label>
+                                                <input id="email" type="text" name="email" class="form-control" data-parsley-group="wizard-step-1" />
+                                                <span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="email"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="id_number"> ID NO / Passport NO</label>
+                                                <input id="id_number" type="text" name="id_number" class="form-control" data-parsley-group="wizard-step-1"  />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="kra_pin"> KRA PIN </label>
+                                                <input id="kra_pin" type="text" name="kra_pin" class="form-control" data-parsley-group="wizard-step-1" />
+                                                <span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="kra_pin"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="physical_address">Physical Address</label>
+                                                <input id="physical_address" type="text" name="physical_address" class="form-control" data-parsley-group="wizard-step-1" />
+                                                <span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="physical_address"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="postal_address"> Postal Address</label>
+                                                <input id="postal_address" type="text" name="postal_address" class="form-control" data-parsley-group="wizard-step-1" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="industry">Industry</label>
+                                                <select id="industry" name="industry" class="form-control">
+                                                    <option value="">Select Type</option>
+                                                    <option value="ICT">ICT</option>
+                                                    <option value="Textile">Textile</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <label class="form-control-label" for="remarks">Remarks</label>
+                                        <textarea id="remarks" rows="3" name="remarks" placeholder="Enter Remarks" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br />
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- end wizard step-1 -->
+                        
+                        <!-- begin wizard step-2 -->
+                        <div class="wizard-step-2">
+                            <fieldset>
+                                <legend class="pull-left width-full">Maintain Uploads</legend>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="drag-and-drop-zone" class="dm-uploader p-5">
+                                            <h5 class="mb-5 mt-5 text-muted">Drag &amp; drop files here</h5>
+                                            <div class="btn btn-primary btn-block mb-5">
+                                                <span>Open the file browser</span>
+                                                <input type="file" title="Click to add file" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="uploadedFiles" style="display: none">
+                                        </div>
+                                        <div id="uploadedFilesList" style="display: none">
+                                            <ul id="filelist" class="chart-legend"></ul>
+                                        </div>
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                Upload Messages
+                                            </div>
+                                            <ul class="list-group list-group-flush" id="debug">
+                                                <li class="list-group-item text-muted empty">Loading plugin....</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br />
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- end wizard step-2 -->
+                        <!-- begin wizard step-3 -->
+                        <div class="wizard-step-3">
+                            <legend class="pull-left width-full">Confirm Details</legend>
+
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <div class="form-group">
+                                        <input id="confirm_applicantrecordid" type="hidden" name="confirm_applicantrecordid" />
+                                        <label for="confirm_client_type"><b>Client Type</b></label>
+                                        <input type="text" id="confirm_client_type" name="confirm_client_type" class="form-control" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="confirm_client_name">Cient Name</label>
+                                        <input id="confirm_client_name" type="text" name="confirm_client_name" class="form-control" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="confirm_phone_number">Phone Number</label>
+                                        <input type="text" id="confirm_phone_number" name="confirm_phone_number" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_email"> Email Address</label>
+                                            <input id="confirm_email" type="text" name="confirm_email" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_id_number"> ID NO / Passport NO</label>
+                                            <input id="confirm_id_number" type="text" name="confirm_id_number" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_kra_pin">KRA PIN</label>
+                                            <input id="confirm_kra_pin" type="text" name="confirm_kra_pin" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_physical_address">Physical Address</label>
+                                            <input id="confirm_physical_address" type="text" name="confirm_physical_address" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_postal_address"> Postal Address</label>
+                                            <input id="confirm_postal_address" type="text" name="confirm_postal_address" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_industry"> Industry </label>
+                                            <input id="confirm_industry" type="text" name="confirm_industry" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="confirm_remarks">Remarks</label>
+                                            <input id="confirm_remarks" type="text" name="confirm_remarks" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- End wizard step-3 -->
+                        <!-- begin wizard step-4 -->
+                        <div class="wizard-step-4">
+                            <legend class="pull-left">
+                                Summary
+                            </legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-container">
+                                        <div class="profile-section">
+                                            <div class="profile-info">
+                                                <div class="table-responsive">
+                                                    <table class="table table-profile">
+                                                        <tbody>
+                                                            <tr class="highlight">
+                                                                <td class="field">System Reference</td>
+                                                                <td><label id="summary_system_reference" name="summary_system_reference"></label></td>
+                                                            </tr>
+                                                            <tr class="divider">
+                                                                <td colspan="2"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="field"></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr class="highlight">
+                                                                <td class="field">Status</td>
+                                                                <td><label id="summary_status" name="summary_status"></label></td>
+                                                            </tr>
+                                                            <tr class="divider">
+                                                                <td colspan="2"></td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="field"></td>
+                                                                <td></td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="field"></td>
+                                                                <td>
+                                                                    <a href="@Url.Action("ClientLogin", "Home")" class="text-success">Back to login</a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end wizard step-4 -->
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- end panel-body -->
+</div>
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/assets/static/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="~/assets/static/plugins/dataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/dataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/dataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/parsley/dist/parsley.js"></script>
+    <script src="~/assets/static/plugins/uploader/js/jquery.dm-uploader.min.js"></script>
+    <script src="~/assets/static/js/debugger.js"></script>
+    @* <script src="~/assets/static/js/onboard/ind-onboard-uploader.js"></script>*@
+    <script src="~/assets/static/js/onboard/client-onboard-uploader.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="~/assets/static/js/onboard/ind-onboard-form-wizard.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+
+
+
+    <!-- File item template -->
+    <script type="text/html" id="files-template">
+        <li class="media">
+          <div class="media-body mb-1">
+            <p class="mb-2">
+              <strong>%%filename%%</strong> - Status: <span class="text-muted">Waiting</span>
+            </p>
+            <div class="progress mb-2">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+    role="progressbar"
+    style="width: 0%"
+    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+            <hr class="mt-1 mb-1" />
+          </div>
+        </li>
+    </script>
+
+    <!-- Debug item template -->
+    <script type="text/html" id="debug-template">
+        <li class="list-group-item text-%%color%%"><strong>%%date%%</strong>: %%message%%</li>
+    </script>
+}

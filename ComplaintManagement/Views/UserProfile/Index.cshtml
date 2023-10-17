@@ -1,0 +1,134 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model IEnumerable<ComplaintManagement.Models.MenuModel>
+
+@section PageStyles{
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-user"></i> My Profile <small> Details</small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("Index", "UserProfile")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Details</h4>
+    </div>
+    <div class="panel-body">
+        <div class="profile-container">
+            <!-- begin profile-section -->
+            <div class="profile-section">
+                <!-- begin profile-left -->
+                <div class="profile-left">
+                    <!-- begin profile-image -->
+                    <div class="profile-image">
+                        <img id="profilepic" name="profilepic" src="" />
+                        <i class="fa fa-user hide"></i>
+                    </div>
+                    <!-- end profile-image -->
+                    <div class="m-b-10">
+                        <span class="btn btn-warning btn-block btn-sm fileinput-button">
+                            <span>Change Picture</span>
+                            <input type="file" id="img-file-input" name="img-file-input" onchange="StartRead()" />
+                        </span>
+                    </div>
+                    <!-- begin profile-highlight <div class="note note-info">-->
+                    <div class="profile-highlight">
+                        <h4>Please Note</h4>
+                        <ul>
+                            <li>The maximum file size for uploads is <strong>5 MB</strong>.</li>
+                            <li>Only image files (<strong>JPG, GIF, PNG</strong>) are allowed.</li>
+                        </ul>
+                    </div>
+                    <!-- end profile-highlight -->
+                </div>
+                <!-- end profile-left -->
+                <!-- begin profile-right -->
+                <div class="profile-right">
+                    <!-- begin profile-info -->
+                    <div class="profile-info">
+                        <!-- begin table -->
+                        <div class="table-responsive">
+                            <table class="table table-profile">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>
+                                            <h4><label id="username" name="username"></label></h4>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="highlight">
+                                        <td class="field" colspan="2" align="center"></td>
+                                    </tr>
+                                    <tr class="divider">
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Phone Number</td>
+                                        <td><a href="#" id="phonenumber" name="phonenumber" data-type="text" data-pk="1" data-title="Enter Phone Number"></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Email Address</td>
+                                        <td><a href="#" id="emailaddress" name="emailaddress" data-type="text" data-pk="2" data-title="Enter Email Address"></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Profile</td>
+                                        <td><label id="profile" name="profile"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Created On</td>
+                                        <td><label id="createdon" name="createdon"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Password</td>
+                                        <td><a href="#" id="password" name="password" data-type="password" data-pk="3" data-title="Enter Password">[hidden]</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Menu Layout</td>
+                                        <td><button id="menutoggler" name="menutoggler" class="btn btn-success btn-xs">@HttpContextAccessor.HttpContext.Session.GetString("menulayout")</button></td>
+                                    </tr>
+                                    <tr class="divider">
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr class="highlight">
+                                        <td class="field" colspan="2" align="center"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- end table -->
+                    </div>
+                    <!-- end profile-info -->
+                </div>
+                <!-- end profile-right -->
+            </div>
+            <!-- end profile-section -->
+        </div>
+        <hr>
+    </div>
+    <!-- end panel-body -->
+</div>
+<!-- end panel -->
+@section PageScripts{
+
+    <script src="~/assets/static/plugins/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/plugins/mockjax/jquery.mockjax.js"></script>
+    <script src="~/assets/static/js/myprofile-editable.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+
+            FormEditable.init();
+        });
+    </script>
+}

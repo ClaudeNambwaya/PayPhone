@@ -1,0 +1,154 @@
+﻿@using ComplaintManagement.Models
+@model LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>COMPLAINT MANAGEMENT</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; child-src 'self' 'unsafe-inline' 'unsafe-eval'; object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; img-src 'self' https://www.google-analytics.com; style-src 'self' 'unsafe-inline'">
+    <link rel="shortcut icon" type="image/png" href="~/assets/static/img/favicon.ico" />
+
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link href="~/assets/static/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    @*<link href="~/assets/static/plugins/fontawesome-5.15.3/css/fontawesome.min.css" rel="stylesheet" />*@
+    <link href="~/assets/static/css/animate.min.css" rel="stylesheet" />
+    <link href="~/desiredfont.css" rel="stylesheet" />
+    <link href="~/login/style.min.css" rel="stylesheet" />
+    <link href="~/assets/static/css/style-responsive.min.css" rel="stylesheet" />
+    <link href="~/login/default.css" rel="stylesheet" id="theme" />
+    <!-- ================== END BASE CSS STYLE ================== -->
+    <!-- ================== BEGIN BASE JS ================== -->
+    @*<script src="~/assets/static/plugins/pace/pace.min.js"></script>*@
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body class="pace-top bg-white">
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+    <!-- begin #page-container -->
+    <div id="page-container" class="fade">
+        <!-- begin login -->
+        <div class="login login-with-news-feed">
+            <!-- begin news-feed -->
+            <div class="news-feed">
+                <div class="news-image">
+                    <img src="~/assets/img/4.jpg" data-id="login-cover-image" alt="" height="100%" />
+                </div>
+            </div>
+            <!-- end news-feed -->
+            <!-- begin right-content -->
+            <div class="right-content">
+                <!-- begin login-content -->
+                <div class="login-content">
+                    <div class="login-header">
+                        <div class="madison-logo">
+                            <i class="fa fa-gavel" style="font-size:80px" aria-hidden="true"></i>
+                            @*<i class="fa fa-gavel"  ></i>*@
+                        </div>
+                    </div>
+                    @*<img class="madison-logo"<i class="fa-solid fa-heart-pulse"></i>" alt="Madison logo" />*@
+                    @*<img class="madison-logo" src="~/assets/static/img/brand2d/madison-logo.png" alt="Madison logo" />*@
+                    
+                    <form action="/AppAuth/AdminLogin" method="POST" class="margin-bottom-0">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(s => s.ReturnURL)
+                        @Html.AntiForgeryToken()
+
+                        <div class="row" id="errors">
+                            @{
+                                Html.RenderPartial("_Alerts");
+                            }
+                        </div>
+                        <div class="form-group m-b-15">
+                            <label for="email">Email Address</label>
+                            <input type="text" id="email" name="email" class="form-control input-lg" placeholder="Email Address" required />
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="form-control input-lg" placeholder="Password" required />
+                            <i class="glyphicon glyphicon-eye-open form-control-feedback"></i>
+                        </div>
+                        <div class="checkbox m-b-30">
+                            @*<label>
+                            <input type="checkbox" /> Remember Me
+                            </label>*@
+                        </div>
+                        <div class="login-buttons">
+                            <div class="form-group">
+                                <a href="@Url.Action("ResetPassword", "Home")" title="Forgot your password? Click here to reset">Forgot your password?</a>
+                            </div>
+                            <button id="login" name="login" type="submit" class="btn btn-primary btn-block btn-sm">Sign In</button>
+                            <br />
+                            <a href="@Url.Action("Register", "Registration")" title="Existing customer? Click here to sign up" class="btn btn-success btn-block btn-sm">Sign Up</a>
+                            <br />
+                            New customer? Click here to join as <a href="@Url.Action("ClientOnboardInd", "Home")" title="Individual">individual</a>, <a href="@Url.Action("ClientOnboardJoi", "Home")" title="Joint">joint</a>  or as a <a href="@Url.Action("ClientOnboardCorp", "Home")" title="Corporate">corporate</a>
+                        </div>
+                        <hr />
+                        <p class="text-center">
+                            Copyright &copy; @DateTime.Now.Year <a href="http://www.smartcode.co.ke" target="_blank">Smartcode Technologies</a>.
+                            All rights reserved.
+                        </p>
+                    </form>
+                </div>
+                <!-- end login-content -->
+            </div>
+            <!-- end right-container -->
+        </div>
+        <!-- end login -->
+    </div>
+    <!-- end page container -->
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="~/assets/static/plugins/jquery/jquery-1.9.1.min.js"></script>
+    <script src="~/assets/static/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+    <script src="~/assets/static/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="assets/crossbrowserjs/html5shiv.js"></script>
+        <script src="assets/crossbrowserjs/respond.min.js"></script>
+        <script src="assets/crossbrowserjs/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="~/assets/static/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/assets/static/plugins/jquery-cookie/jquery.cookie.js"></script>
+    <!-- ================== END BASE JS ================== -->
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="~/assets/static/plugins/password-indicator/js/password-indicator.js"></script>
+    <script src="~/assets/static/js/hideShowPassword.min.js"></script>
+    <script src="~/assets/static/js/cp.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/jquery.blockUI.js"></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+    <script>
+        $(document).ready(function () {
+            App.init();
+            //FormPlugins.init();
+        });
+
+        $(document).on('submit', 'form', function (e) {
+            if ($('form')[0].checkValidity()) {
+                if (e.isDefaultPrevented()) {
+                } else {
+                    BlockUI();
+                }
+            }
+        });
+
+        function BlockUI() {
+            $.blockUI({ message: '<h4><img src="/assets/static/img/loading1.gif" /> Please wait...</h4>' });
+        }
+
+        function UnblockUI() {
+            $.unblockUI();
+        }
+    </script>
+</body>
+</html>

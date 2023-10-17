@@ -1,0 +1,35 @@
+﻿/********* Tiles **********/
+.tile {
+    width: 70px;
+    height: 35px;
+    display: inline-block;
+    margin: 5px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 2px solid #1F3B56;
+}
+
+    .tile label {
+        color: #1F3B56;
+        line-height: 3px;
+    }
+
+.red {
+    background-color: #ED3D00;
+}
+
+.yellow {
+    background-color: #FCE266;
+}
+
+.green {
+    background-color: #69D230;
+}
+
+.blue {
+    background-color: #72D6FE;
+}
+/********* Tiles **********/

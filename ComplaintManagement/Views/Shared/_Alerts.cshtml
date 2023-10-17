@@ -1,0 +1,18 @@
+﻿@using ComplaintManagement.Helpers
+@{
+    var alerts = TempData.ContainsKey(ComplaintManagement.Helpers.Alert.TempDataKey)
+                ? (List<ComplaintManagement.Helpers.Alert>)TempData[ComplaintManagement.Helpers.Alert.TempDataKey]!
+                : new List<ComplaintManagement.Helpers.Alert>();
+
+    foreach (var alert in alerts)
+    {
+        var dismissableClass = alert.Dismissable ? "alert-dismissable" : null;
+        <div class="alert alert-@alert.AlertStyle @dismissableClass">
+            @if (alert.Dismissable)
+            {
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            }
+            @Html.Raw(alert.Message)
+        </div>
+    }
+}

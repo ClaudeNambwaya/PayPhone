@@ -1,0 +1,292 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/css/pretty-checkbox.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-eye"></i> Access Control <small> Permissions </small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("Permissions", "AccessControl")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Permissions List</h4>
+    </div>
+    <div class="panel-body">
+        <p></p>
+        <div class="form-horizontal">
+            <div class="row">
+                <a id="editabledatatable_new" class="btn btn-sm btn-success" data-toggle="modal" data-target="#capture-permission">
+                    <i class="fa fa-plus"></i> Add New
+                </a>
+                <br />
+                <br />
+            </div>
+            <div class="row">
+                <table id="editabledatatable" class="table table-striped table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:auto">Name</th>
+                            <th style="width:auto"></th>
+                            <th style="width:auto"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="modal fade" id="capture-permission" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Capture Permission</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input id="recordid" type="hidden" name="recordid" />
+                                            <label class="form-control-label" for="permissionname">Name</label>
+                                            <input id="permissionname" type="text" name="permissionname" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-white btn-sm" id="cancel" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;Cancel</a>
+                                    <a href="#" class="btn btn-success btn-sm" id="save"><i class="fa fa-save"></i>&nbsp;Save</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <!-- end panel-body -->
+</div>
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/jquery.blockUI.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+            //TableManageResponsive.init();
+
+            var InitiateEditableDataTable = function () {
+                return {
+                    init: function () {
+                        //Datatable Initiating
+                        var oTable = $('#editabledatatable').dataTable({
+                            "responsive": true,
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).attr("recid", data.id);
+                            },
+                            "aoColumns": [
+                                { "data": "permission_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                                {
+                                    "bSortable": false,
+                                    "sDefaultContent": "<a href='#' class='btn btn-info btn-xs edit'><i class='fa fa-edit'></i> Edit</a>"
+                                },
+                                {
+                                    "bSortable": false,
+                                    "sDefaultContent": "<a href='#' class='btn btn-danger btn-xs delete'><i class='fas fa-trash-alt'></i> Delete</a>"
+                                }
+                            ]
+                        });
+
+                        var isEditing = null;
+
+                        //Edit
+                        $('#editabledatatable').on("click", 'a.edit', function (e) {
+                            e.preventDefault();
+
+                            nRow = $(this).parents('tr')[0];
+
+                            //console.log($(this).parents('tr').attr("recid"));
+
+                            //console.log(nRow);
+
+                            if (isEditing !== null && isEditing != nRow) {
+                                //restoreRow(oTable, isEditing);
+                                editRow(oTable, nRow);
+                                isEditing = nRow;
+                            } else {
+                                editRow(oTable, nRow);
+                                isEditing = nRow;
+                            }
+                        });
+
+                        function editRow(oTable, nRow) {
+                            var aData = oTable.fnGetData(nRow);
+                            var jqTds = $('>td', nRow);
+
+                            var json = JSON.parse(JSON.stringify(aData));
+
+                            $('.modal-body #recordid').val($(nRow).attr("recid"));
+                            $('.modal-body #permissionname').val(json["permission_name"]);
+
+                            $("#capture-permission").appendTo("body").modal("show");
+                        }
+
+                        //Delete an Existing Row
+                        $('#editabledatatable').on("click", 'a.delete', function (e) {
+                            e.preventDefault();
+                            var a = $(this).closest(".panel");
+
+                            var nRow = $(this).parents('tr')[0];
+
+                            var rec = $(this).parents('tr').attr("recid");
+
+                            //console.log($(this).parents('tr').attr("recid"));
+                            Swal.fire({
+                                title: "Are you sure?",
+                                text: "You want to delete this record",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonText: "Proceed!",
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    
+                                    oTable.fnDeleteRow(nRow);
+                                    //Ajax to flag as deleted
+                                    var parameters = { module: 'permissions', id: rec };
+                                    $.ajax({
+                                        url: "@Url.Action("Delete", "AccessControl")",
+                                        type: "GET",
+                                        data: parameters,
+                                        beforeSend: function () {
+                                            if (!$(a).hasClass("panel-loading")) {
+                                                var t = $(a).find(".panel-body"),
+                                                    i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                                                $(a).addClass("panel-loading"), $(t).prepend(i);
+                                            }
+                                        },
+                                        success: function (data) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            Swal.fire({
+                                                title: "Deleted",
+                                                text: "Record has been deleted",
+                                                icon: "success",
+                                                confirmButtonText: "Ok"
+                                            });
+                                            getData(data);
+                                        },
+                                        error: function (xhr, textStatus, errorThrown) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            Swal.fire({
+                                                title: "Failed",
+                                                text: "Record could not be deleted " + errorThrown,
+                                                icon: "error",
+                                                confirmButtonText: "Ok",
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    e.preventDefault();
+                                }
+                            });
+                        });
+                    }
+                };
+            }();
+
+            InitiateEditableDataTable.init();
+
+            GetPermissions();
+        });
+
+        function GetPermissions() {
+            $.get('GetRecords', { module: 'permissions' }, function (data) {
+                getData(data);
+            });
+        }
+
+        function getData(jsonstring) {
+            table = $('#editabledatatable').dataTable();
+            oSettings = table.fnSettings();
+            table.fnClearTable(this);
+
+            var json = $.parseJSON(JSON.stringify(jsonstring));
+            //var json = JSON.parse(jsonstring);
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+                table.oApi._fnAddData(oSettings, item);
+            }
+            oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+            table.fnDraw();
+        }
+
+        $('#save').click(function () {
+            var a = $(this).closest(".panel");
+
+            var id = document.getElementById('recordid').value;
+            var permission_name = document.getElementById('permissionname').value;
+
+            var parameters = {
+                id: id,
+                permission_name: permission_name
+            };
+
+            $.ajax({
+                url: "@Url.Action("CreatePermission", "AccessControl")",
+                type: "GET",
+                data: parameters,
+                beforeSend: function () {
+                    if (!$(a).hasClass("panel-loading")) {
+                        var t = $(a).find(".panel-body"),
+                            i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                        $(a).addClass("panel-loading"), $(t).prepend(i);
+                    }
+                },
+                success: function (data) {
+                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                    if (data == 'Success') {
+                        GetPermissions();
+                        $("#capture-permission").modal("hide").data("bs.modal", null);
+                    } else {
+                        Swal.fire({
+                            title: "Failed",
+                            text: data,
+                            icon: "error",
+                            confirmButtonText: "Ok"
+                        });
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                    Swal.fire({
+                        title: "Failed",
+                        text: "Record could not be saved " + errorThrown,
+                        icon: "error",
+                        confirmButtonText: "Ok"
+                    });
+                }
+            });
+        });
+
+        $("#capture-permission").on("hidden.bs.modal", function (e) {
+            $('#recordid').val("");
+            $('#permissionname').val("");
+        });
+    </script>
+}

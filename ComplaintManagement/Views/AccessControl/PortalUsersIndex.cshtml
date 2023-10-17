@@ -1,0 +1,435 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/css/pretty-checkbox.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-eye"></i> Access Control <small> Users</small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("PortalUsersIndex", "AccessControl")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Users List</h4>
+    </div>
+    <div class="panel-body">
+        <p></p>
+        <div class="form-horizontal">
+            <div class="row">
+                <a id="editabledatatable_new" class="btn btn-sm btn-success" data-toggle="modal" data-target="#capture-user">
+                    <i class="fa fa-plus"></i> Add New
+                </a>
+                <br />
+                <br />
+            </div>
+            <div class="row">
+                <table id="editabledatatable" class="table table-striped table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:auto">Name</th>
+                            <th style="width:auto">Phone Number</th>
+                            <th style="width:auto">Email Address</th>
+                            <th style="width:auto">Role</th>
+                            <th style="width:auto"></th>
+                            <th style="width:auto"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="modal fade" id="capture-user" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Capture User</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input id="recordid" type="hidden" name="recordid" />
+                                            <label class="form-control-label" for="username">Names</label>
+                                            <input id="username" type="text" name="username" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="phonenumber">Phone Number</label>
+                                            <input id="phonenumber" type="text" name="phonenumber" class="form-control" />
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="emailaddress">Email Address</label>
+                                            <input id="emailaddress" type="text" name="emailaddress" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-control-label" for="profile">Default Role</label>
+                                            <select id="profile" name="profile" class="form-control selectpicker" style="width: 100%"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <label class="form-control-label" for="googleauthenticate">Google Authenticate</label><br />
+                                            <div class="pretty p-switch p-fill">
+                                                <input type="checkbox" id="googleauthenticate" name="googleauthenticate" />
+                                                <div class="state p-success">
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <label class="form-control-label" for="locked">Locked</label><br />
+                                            <div class="pretty p-switch p-fill">
+                                                <input type="checkbox" id="locked" name="locked" />
+                                                <div class="state p-success">
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <label class="form-control-label" for="reset">Reset Password</label><br />
+                                            <div class="pretty p-switch p-fill">
+                                                <input type="checkbox" id="reset" name="reset" />
+                                                <div class="state p-success">
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-white btn-sm" id="cancel" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;Cancel</a>
+                                    <a href="#" class="btn btn-success btn-sm" id="save"><i class="fa fa-save"></i>&nbsp;Save</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <!-- end panel-body -->
+</div>
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/jquery.blockUI.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+            //TableManageResponsive.init();
+
+            var InitiateEditableDataTable = function () {
+                return {
+                    init: function () {
+                        //Datatable Initiating
+                        var oTable = $('#editabledatatable').dataTable({
+                            "responsive": true,
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).attr("recid", data.id);
+                            },
+                            "aoColumns": [
+                              { "data": "name", "autoWidth": true, "sDefaultContent": "n/a" },
+                              { "data": "mobile", "autoWidth": true, "sDefaultContent": "n/a" },
+                              { "data": "email", "autoWidth": true, "sDefaultContent": "n/a" },
+                              { "data": "role_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                              {
+                                  "bSortable": false,
+                                  "sDefaultContent": "<a href='#' class='btn btn-info btn-xs edit'><i class='fa fa-edit'></i> Edit</a> "
+                              },
+                              {
+                                  "bSortable": false,
+                                  "sDefaultContent": "<a href='#' class='btn btn-danger btn-xs delete'><i class='fas fa-trash-alt'></i> Delete</a>"
+                              }
+                            ]
+                        });
+
+                        var isEditing = null;
+
+                        //Edit
+                        $('#editabledatatable').on("click", 'a.edit', function (e) {
+                            e.preventDefault();
+
+                            nRow = $(this).parents('tr')[0];
+
+                            if (isEditing !== null && isEditing != nRow) {
+                                //console.log(nRow);
+                                //restoreRow(oTable, isEditing);
+                                editRow(oTable, nRow);
+                                isEditing = nRow;
+                            } else {
+                                editRow(oTable, nRow);
+                                isEditing = nRow;
+                            }
+                        });
+
+                        function restoreRow(oTable, nRow) {
+                            var aData = oTable.fnGetData(nRow);
+                            var jqTds = $('>td', nRow);
+
+                            for (var i = 0, iLen = jqTds.length; i < iLen; i++) {
+                                oTable.fnUpdate(aData[i], nRow, i, false);
+                            }
+
+                            oTable.fnDraw();
+                        }
+
+                        function editRow(oTable, nRow) {
+                            var aData = oTable.fnGetData(nRow);
+                            var jqTds = $('>td', nRow);
+
+                            var json = JSON.parse(JSON.stringify(aData));
+
+                            $('.modal-body #recordid').val($(nRow).attr("recid"));
+                            $('.modal-body #username').val(json["name"]);
+                            $('.modal-body #phonenumber').val(json["mobile"]);
+                            $('.modal-body #emailaddress').val(json["email"]);
+                            $('.modal-body #profile').val(json["role_id"]).trigger("change");
+
+                            var teller = json["teller"];
+
+                            if (typeof teller === 'string') {
+                                teller = json["teller"].toLowerCase();
+                            }
+
+                            if (teller) {
+                                $('.modal-body #teller').prop({ checked: true });
+                            } else {
+                                $('.modal-body #teller').prop({ checked: false });
+                            }
+
+                            var locked = json["locked"];
+
+                            if (typeof locked === 'string') {
+                                locked = json["locked"].toLowerCase();
+                            }
+
+                            if (locked) {
+                                $('.modal-body #locked').prop({ checked: true });
+                            } else {
+                                $('.modal-body #locked').prop({ checked: false });
+                            }
+
+                            var google_authenticate = json["google_authenticate"];
+
+                            if (typeof google_authenticate === 'string') {
+                                google_authenticate = json["google_authenticate"].toLowerCase();
+                            }
+
+                            if (google_authenticate) {
+                                $('.modal-body #googleauthenticate').prop({ checked: true });
+                            } else {
+                                $('.modal-body #googleauthenticate').prop({ checked: false });
+                            }
+
+                            $("#capture-user").appendTo("body").modal("show");
+                        }
+
+                        //Delete an Existing Row
+                        $('#editabledatatable').on("click", 'a.delete', function (e) {
+                            e.preventDefault();
+                            var a = $(this).closest(".panel");
+
+                            var nRow = $(this).parents('tr')[0];
+
+                            var parameters = {
+                                id: $(this).parents('tr').attr("recid"),
+                                module: 'portal_users'
+                            };
+                            
+                            Swal.fire({
+                                title: "Are you sure?",
+                                text: "You want to delete this record",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonText: "Proceed!",
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    $.ajax({
+                                        url: "@Url.Action("Delete", "AccessControl")",
+                                        type: "GET",
+                                        data: parameters,
+                                        beforeSend: function () {
+                                            if (!$(a).hasClass("panel-loading")) {
+                                                var t = $(a).find(".panel-body"),
+                                                    i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                                                $(a).addClass("panel-loading"), $(t).prepend(i);
+                                            }
+                                        },
+                                        success: function (data) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            oTable.fnDeleteRow(nRow);
+                                            Swal.fire({
+                                                title: "Deleted",
+                                                text: "Record has been deleted",
+                                                icon: "success",
+                                                confirmButtonText: "Ok"
+                                            });
+                                            getData(data);
+                                        },
+                                        error: function (xhr, textStatus, errorThrown) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            Swal.fire({
+                                                title: "Failed",
+                                                text: "Record could not be deleted " + errorThrown,
+                                                icon: "error",
+                                                confirmButtonText: "Ok"
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    return;
+                                    e.preventDefault();
+                                }
+                            });
+                        });
+                    }
+                };
+            }();
+
+            InitiateEditableDataTable.init();
+
+            var FormPlugins = function () {
+                "use strict";
+                return {
+                    init: function () {
+                        handleSelectpicker();
+                    }
+                }
+            }();
+
+            FormPlugins.init();
+
+            GetProfiles();
+
+            GetUsers();
+        });
+
+        handleSelectpicker = function () {
+            $(".selectpicker").select2()
+        }
+
+        function GetProfiles() {
+            $.get('GetRecords', { module: 'roles' }, function (data) {
+                $("#profile").get(0).options.length = 0;
+                $("#profile").get(0).options[0] = new Option("Please Select Role", "-1");
+
+                $.each(data, function (index, item) {
+                    $("#profile").get(0).options[$("#profile").get(0).options.length] = new Option(item.role_name, item.id);
+                });
+
+                $("#profile").bind("change", function () {
+                    //console.log($(this).val() + ' ' + $("#program option:selected").text());
+                });
+            });
+        }
+
+        function GetUsers() {
+            $.get('GetRecords', { module: 'portal_users' }, function (data) {
+                getData(data);
+            });
+        }
+
+        function getData(jsonstring) {
+            table = $('#editabledatatable').dataTable();
+            oSettings = table.fnSettings();
+            table.fnClearTable(this);
+
+            var json = $.parseJSON(JSON.stringify(jsonstring));
+            var arr = [];
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+                table.oApi._fnAddData(oSettings, item);
+            }
+            oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+            table.fnDraw();
+        }
+
+        $('#save').click(function () {
+            var a = $(this).closest(".panel");
+
+            var recordid = document.getElementById('recordid').value;
+            var name = document.getElementById('username').value;
+            var mobile = document.getElementById('phonenumber').value;
+            var email = document.getElementById('emailaddress').value;
+            var role_id = document.getElementById('profile').value;
+            var locked = document.getElementById('locked').checked;
+            var google_authenticate = document.getElementById('googleauthenticate').checked;
+            var reset_password = document.getElementById('reset').checked;
+
+            var parameters = {
+                id: recordid, name: name, mobile: mobile,
+                email: email, role_id: role_id, locked: locked,
+                google_authenticate: google_authenticate,
+                reset_password: reset_password
+            };
+
+            $.ajax({
+                url: "@Url.Action("CreatePortalUser", "AccessControl")",
+                type: "GET",
+                data: parameters,
+                beforeSend: function () {
+                    if (!$(a).hasClass("panel-loading")) {
+                        var t = $(a).find(".panel-body"),
+                            i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                        $(a).addClass("panel-loading"), $(t).prepend(i);
+                    }
+                },
+                success: function (data) {
+                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                    if (data == 'Success') {
+                        GetUsers();
+                        $("#capture-user").modal("hide");
+                    } else {
+                        Swal.fire({
+                            title: "Failed",
+                            text: data,
+                            icon: "error",
+                            confirmButtonText: "Ok"
+                        });
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                    Swal.fire({
+                        title: "Failed",
+                        text: "Record could not be saved " + errorThrown,
+                        icon: "error",
+                        confirmButtonText: "Ok"
+                    });
+                }
+            });
+        });
+
+        $("#capture-user").on("hidden.bs.modal", function (e) {
+            $('#recordid').val("");
+            $('#username').val("");
+            $('#phonenumber').val("");
+            $('#emailaddress').val("");
+            $('#profile').val("").trigger('change');
+            $('#locked').prop({ checked: false });
+        });
+    </script>
+}

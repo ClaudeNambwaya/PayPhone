@@ -1,0 +1,176 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-eye"></i> Access Control <small> Users Approval</small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("PortalUsersUnapproved", "AccessControl")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Users Approval List</h4>
+    </div>
+    <div class="panel-body">
+        <p></p>
+        <div class="form-horizontal">
+            <div class="row">
+                <table id="editabledatatable" class="table table-striped table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:auto">Name</th>
+                            <th style="width:auto">Phone Number</th>
+                            <th style="width:auto">Email Address</th>
+                            <th style="width:auto">Role</th>
+                            <th style="width:auto"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <!-- end panel-body -->
+</div>
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/jquery.blockUI.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+            //TableManageResponsive.init();
+
+            var InitiateEditableDataTable = function () {
+                return {
+                    init: function () {
+                        //Datatable Initiating
+                        var oTable = $('#editabledatatable').dataTable({
+                            "responsive": true,
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).attr("recid", data.id);
+                            },
+                            "aoColumns": [
+                              { "data": "name", "autoWidth": true, "sDefaultContent": "n/a" },
+                              { "data": "mobile", "autoWidth": true, "sDefaultContent": "n/a" },
+                              { "data": "email", "autoWidth": true, "sDefaultContent": "n/a" },
+                              { "data": "role_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                              {
+                                  "bSortable": false,
+                                  "sDefaultContent": "<a href='#' class='btn btn-info btn-xs approve'><i class='fas fa-check'></i> Approve</a>"
+                              }
+                            ]
+                        });
+
+                        //Delete an Existing Row
+                        $('#editabledatatable').on("click", 'a.approve', function (e) {
+                            e.preventDefault();
+                            var a = $(this).closest(".panel");
+
+                            var nRow = $(this).parents('tr')[0];
+
+                            var parameters = {
+                                id: $(this).parents('tr').attr("recid"),
+                                module: 'portal_users'
+                            };
+
+                            Swal.fire({
+                                title: "Are you sure?",
+                                text: "You want to approve this record",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonText: "Proceed!",
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    $.ajax({
+                                        url: "@Url.Action("Approve", "AccessControl")",
+                                        type: "GET",
+                                        data: parameters,
+                                        beforeSend: function () {
+                                            if (!$(a).hasClass("panel-loading")) {
+                                                var t = $(a).find(".panel-body"),
+                                                    i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                                                $(a).addClass("panel-loading"), $(t).prepend(i);
+                                            }
+                                        },
+                                        success: function (data) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            if (data.substring(0, 7) == "Success") {
+                                                //oTable.fnDeleteRow(nRow);
+                                                Swal.fire({
+                                                    title: "Approved",
+                                                    text: "Record has been approved",
+                                                    icon: "success",
+                                                    confirmButtonText: "Ok"
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    title: "Error",
+                                                    text: data,
+                                                    icon: "error",
+                                                    confirmButtonText: "Ok"
+                                                });
+                                            }
+                                            GetUsers();
+                                        },
+                                        error: function (xhr, textStatus, errorThrown) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            Swal.fire({
+                                                title: "Failed",
+                                                text: "Record could not be approved " + errorThrown,
+                                                icon: "error",
+                                                confirmButtonText: "Ok"
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    return;
+                                    e.preventDefault();
+                                }
+                            });
+                        });
+                    }
+                };
+            }();
+
+            InitiateEditableDataTable.init();
+
+            GetUsers();
+        });
+
+        function GetUsers() {
+            $.get('GetRecords', { module: 'portal_users', param: 'unapproved' }, function (data) {
+                getData(data);
+            });
+        }
+
+        function getData(jsonstring) {
+            table = $('#editabledatatable').dataTable();
+            oSettings = table.fnSettings();
+            table.fnClearTable(this);
+
+            var json = $.parseJSON(JSON.stringify(jsonstring));
+            var arr = [];
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+                table.oApi._fnAddData(oSettings, item);
+            }
+            oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+            table.fnDraw();
+        }
+    </script>
+}

@@ -1,0 +1,439 @@
+/*   
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.4
+Version: 1.7.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v1.7/admin/
+*/
+
+.wrapper {
+    min-height: 100vh;
+    background-size: 1250px 400px;
+    background-repeat: no-repeat;
+    background-image: url('../../img/brand2d/mask-group-2.jpg');
+    background-position-x: center;
+    display: flex;
+    align-items: center;
+    
+}
+
+.inner {
+    width: 850px;
+    margin: auto;
+    margin-top: 200px;
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #d3cccc;
+}
+
+.x001-login {
+    align-items: flex-start;
+    background-color: #ffffff;
+    display: flex;
+    min-width: 1920px;
+}
+
+.hidden,
+.hidden * {
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.overlap-group {
+    height: 1080px;
+    margin-left: 2px;
+    position: relative;
+    width: 1918px;
+}
+
+.email-address-1 {
+    height: 25px;
+    left: 1274px;
+    position: absolute;
+    top: 297px;
+    width: 151px;
+}
+
+.email-address {
+    height: 19px;
+    left: 1292px;
+    position: absolute;
+    top: 362px;
+    width: 108px;
+}
+
+.forgot-your-password {
+    height: 19px;
+    left: 1292px;
+    position: absolute;
+    top: 578px;
+    width: 180px;
+}
+
+.password-1 {
+    height: 25px;
+    left: 1272px;
+    position: absolute;
+    top: 441px;
+    width: 102px;
+}
+
+.hide {
+    height: 15px;
+    left: 1657px;
+    position: absolute;
+    top: 515px;
+    width: 24px;
+}
+
+.madison-logo {
+    height: 62px;
+    /*left: 1341px;*/
+    /*position: absolute;*/
+    /*top: 130px;*/
+    bottom: 50px;
+    width: 235px;
+    margin: 50px;
+}
+
+.rectangle-22 {
+    border-radius: 33px;
+    height: 65px;
+    left: 1264px;
+    position: absolute;
+    top: 489px;
+    width: 457px;
+}
+
+.rectangle-4 {
+    border-radius: 33px;
+    height: 65px;
+    left: 1264px;
+    position: absolute;
+    top: 341px;
+    width: 457px;
+}
+
+.group-557 {
+    height: 798px;
+    left: 140px;
+    position: absolute;
+    top: 122px;
+    width: 785px;
+}
+
+.click-here-to-join {
+    height: 19px;
+    left: 1484px;
+    position: absolute;
+    top: 878px;
+    width: 128px;
+}
+
+.new-customer {
+    height: 19px;
+    left: 1346px;
+    position: absolute;
+    top: 873px;
+    width: 123px;
+}
+
+.rectangle-24 {
+    border-radius: 33px;
+    height: 65px;
+    left: 1264px;
+    position: absolute;
+    top: 657px;
+    width: 457px;
+}
+
+.sign-in {
+    height: 25px;
+    left: 1456px;
+    position: absolute;
+    top: 678px;
+    width: 75px;
+}
+
+.password {
+    height: 19px;
+    left: 1292px;
+    position: absolute;
+    top: 511px;
+    width: 73px;
+}
+
+.rectangle-10 {
+    height: 1080px;
+    left: 1068px;
+    position: absolute;
+    top: 0;
+    width: 850px;
+}
+
+.sign-up {
+    height: 25px;
+    left: 1451px;
+    position: absolute;
+    top: 773px;
+    width: 85px;
+}
+
+.rectangle-9 {
+    height: 1080px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1070px;
+}
+
+.rectangle-23 {
+    border-radius: 33px;
+    height: 65px;
+    left: 1264px;
+    position: absolute;
+    top: 751px;
+    width: 457px;
+}
+
+.left-profile-details {
+    font-size: 18px !important;
+    color: #fff;
+    font-weight: 300 !important;
+    margin: 2px 5px 7px;
+}
+
+.left-profile-image {
+    /*margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.breadcrumb > li + li:before {
+    /*content: "\f105";*/
+}
+
+/********* Native tooltip **********/
+/*.tooltip-inner {
+    background-color: #002D6A !important;
+    box-shadow: 0px 0px 4px black;
+    opacity: 1 !important;
+}
+
+.tooltip.top .tooltip-arrow {
+    border-top-color: #002D6A !important;
+    opacity: 1 !important;
+}
+
+.tooltip.right .tooltip-arrow {
+    border-right-color: #002D6A !important;
+}
+
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: #002D6A !important;
+}
+
+.tooltip.left .tooltip-arrow {
+    border-left-color: #002D6A !important;
+}*/
+
+.tooltip-inner {
+    color: #002D6A;
+}
+
+.tooltip-wide + .tooltip.top > .tooltip-inner {
+    background-color: red;
+    color: #002D6A;
+}
+
+.tooltip-wide + .tooltip.top > .tooltip-arrow {
+    border-top-color: red;
+}
+
+.tooltip-wide + .tooltip.bottom > .tooltip-inner {
+    background-color: red;
+    color: #002D6A;
+}
+
+.tooltip-wide + .tooltip.bottom > .tooltip-arrow {
+    border-bottom-color: red;
+}
+
+.tooltip-wide + .tooltip.right > .tooltip-inner {
+    background-color: red;
+    color: #002D6A;
+}
+
+.tooltip-wide + .tooltip.right > .tooltip-arrow {
+    border-right-color: red;
+}
+
+.tooltip-wide + .tooltip > .tooltip-inner {
+    max-width: 100%;
+}
+/********* Native tooltip **********/
+
+/********* Tippy tooltip **********/
+.tippy-box[data-theme~='blue'] {
+    background-color: #fff !important;
+    /*box-shadow: 0px 0px 2px black;*/
+    box-shadow: 0 4px 30px lightgray;
+    color: #002D6A;
+    font-size: 12px;
+}
+
+.tippy-box[data-theme~='blue'][data-placement^='top'] > .tippy-arrow::before {
+    border-top-color: #fff;
+}
+
+.tippy-box[data-theme~='blue'][data-placement^='bottom'] > .tippy-arrow::before {
+    border-bottom-color: #fff;
+}
+
+.tippy-box[data-theme~='blue'][data-placement^='left'] > .tippy-arrow::before {
+    border-left-color: #fff;
+}
+
+.tippy-box[data-theme~='blue'][data-placement^='right'] > .tippy-arrow::before {
+    border-right-color: #fff;
+}
+/********* Tippy tooltip **********/
+
+.widget-one-icon {
+    top: 209px;
+    left: 466px;
+    width: 95px;
+    height: 95px;
+    background: transparent url('../../img/brand2d/group-726.png') 0% 0% no-repeat padding-box;
+    /* opacity: 1; */
+    background-size: cover;
+    /*object-fit: contain;*/
+    float: left;
+}
+
+.widget-two-icon {
+    top: 217px;
+    left: 1197px;
+    width: 95px;
+    height: 95px;
+    background: transparent url('../../img/brand2d/group-727.png') 0% 0% no-repeat padding-box;
+    background-size: cover;
+    float: left;
+}
+
+.widget-three-icon {
+    top: 402px;
+    left: 465px;
+    width: 95px;
+    height: 95px;
+    background: transparent url('../../img/brand2d/group-728.png') 0% 0% no-repeat padding-box;
+    background-size: cover;
+    float: left;
+}
+
+.widget-four-icon {
+    top: 407px;
+    left: 1197px;
+    width: 95px;
+    height: 95px;
+    background: transparent url('../../img/brand2d/group-729.png') 0% 0% no-repeat padding-box;
+    background-size: cover;
+    float: left;
+}
+
+.selectpicker + .select2-container .select2-selection {
+    border-radius: 40px;
+}
+
+.accordion-toggle {
+    background-image: url('../../img/brand2d/plus.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+}
+
+.accordion-toggle[aria-expanded="true"] {
+    background-image: url('../../img/brand2d/minus.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+    color: #00B194;
+}
+
+.navbar-logo, .coming-soon .brand .logo, .login .login-header .brand .logo {
+    border-color: #4DCACA #31A3A3 #1D8888;
+}
+.navbar.navbar-inverse .navbar-brand,
+.sidebar .nav > li.active > a,
+.sidebar .nav > li.active > a:focus,
+.sidebar .nav > li.active > a:hover,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+    background: #00B194;
+}
+.navbar.navbar-inverse .navbar-brand {
+    color: #fff !important;
+}
+.text-theme,
+.sidebar .sub-menu > li.active > a:before {
+    color: #00B194;
+}
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-header {
+        background: #00B194;
+    }
+}
+
+
+/* Added in v1.5 */
+
+.gradient-enabled .navbar.navbar-inverse .navbar-brand,
+.gradient-enabled .sidebar .nav > li.active > a, 
+.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a:hover,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.gradient-enabled .label.label-theme,
+.gradient-enabled .btn.btn-scroll-to-top {
+    background: rgb(0,210,210); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwZDJkMiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMGFjYWMiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  rgba(0,210,210,1) 0%, rgba(0,172,172,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,210,210,1)), color-stop(100%,rgba(0,172,172,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00d2d2', endColorstr='#00B194',GradientType=0 ); /* IE6-8 */
+}
+.pace-progress {
+    background: #00B194;
+}
+.pace .pace-activity {
+    border-top-color: #00B194;
+    border-left-color: #00B194;
+}
+
+
+/* Added in v1.7 */
+
+.page-with-light-sidebar .sidebar .nav > li.active > a > i {
+    color: #00B194;
+}
+.page-with-light-sidebar .sidebar .nav > li.active > a .badge,
+.page-with-light-sidebar .sidebar .nav > li.active > a .label.label-theme {
+    background: #00B194;
+}
+
+.modal-center {
+    top:50% !important;
+    transform: translateY(-50%) !important;
+}

@@ -1,0 +1,106 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/morris/morris.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-home"></i> Home </h1>
+<!-- end page-header -->
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-3 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="widget widget-stats bg-green">
+            <div class="stats-icon stats-icon-lg"><i class="fas fa-exchange-alt"></i></div>
+            <div class="stats-title" id="statistic_one_title">Category</div>
+            <div class="stats-number" id="statistic_one"></div>
+            <div class="stats-progress progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+            </div>
+            <div class="stats-desc">Total number of Categories</div>
+        </div>
+    </div>
+    <!-- end col-3 -->
+    <!-- begin col-3 -->
+
+    <div class="col-md-3 col-sm-6">
+        <div class="widget widget-stats bg-orange">
+            <div class="stats-icon stats-icon-lg"><i class="fa fa-random fa-fw"></i></div>
+            <div class="stats-title" id="statistic_two_title">Sub-Category</div>
+            <div class="stats-number" id="statistic_two"></div>
+            <div class="stats-progress progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+            </div>
+            <div class="stats-desc">Total number of Sub Categories</div>
+        </div>
+    </div>
+    <!-- end col-3 -->
+    <!-- begin col-3 -->
+
+    <div class="col-md-3 col-sm-6">
+        <div class="widget widget-stats bg-blue">
+            <div class="stats-icon stats-icon-lg"><i class="fa fa-globe fa-fw"></i></div>
+            <div class="stats-title" id="statistic_three_title">Complaint Type</div>
+            <div class="stats-number" id="statistic_three"></div>
+            <div class="stats-progress progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+            </div>
+            <div class="stats-desc">Total number of Complaint Types</div>
+        </div>
+    </div>
+    <!-- end col-3 -->
+    <!-- begin col-4 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="widget widget-stats bg-red">
+            <div class="stats-icon stats-icon-lg"><i class="fa fa-globe fa-fw"></i></div>
+            <div class="stats-title" id="statistic_four_title">State</div>
+            <div class="stats-number" id="statistic_four"></div>
+            <div class="stats-progress progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+            </div>
+            <div class="stats-desc">Total number of States</div>
+        </div>
+    </div>
+    <!-- end col-4 -->
+</div>
+<!-- end row -->
+<!-- begin row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget-chart with-sidebar bg-black">
+            <div class="widget-chart-content">
+                <h4 class="chart-title">
+                    Analytics
+                    <small>Complaints DATA (Last 6 months)</small>
+                </h4>
+                <div id="statistics-line-chart" class="morris-inverse" style="height: 260px;"></div>
+            </div>
+            <div class="widget-chart-sidebar bg-black-darker" id="percentiles">
+                <div class="chart-number">
+                    <div id="total_transfers"></div>
+                    <small>All Complaints DATA</small>
+                </div>
+                <div id="statistics-donut-chart" style="height: 140px"></div>
+                <br />
+                <ul class="chart-legend"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+
+
+@section PageScripts{
+    <script src="~/assets/static/plugins/gritter/js/jquery.gritter.js"></script>
+    <script src="~/assets/static/plugins/morris/raphael.min.js"></script>
+    <script src="~/assets/static/plugins/morris/morris.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/dashboard.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            App.init();
+            DashboardV2.init();
+        });
+    </script>
+}   

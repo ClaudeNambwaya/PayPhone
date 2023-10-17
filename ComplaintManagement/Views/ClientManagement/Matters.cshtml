@@ -1,0 +1,165 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="~/assets/static/css/pretty-checkbox.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/dataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/dataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/parsley/src/parsley.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/uploader/css/jquery.dm-uploader.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/uploader/css/style.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa-regular fa-book"></i> SHERIA <small> MATTERS</small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("Matters", "ClientManagement")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo-alt"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Matters List</h4>
+    </div>
+    <div class="panel-body">
+        <p></p>
+        <div class="form-horizontal">
+            <div class="row">
+            <a id="editabledatatable_new" class="btn btn-sm btn-success" data-toggle="modal" data-target="#capture-record">
+            <i class="fa fa-plus"></i> Add New
+            </a>
+            <br />
+            <br />
+            </div>
+            <div class="row">
+                <table id="editabledatatable" class="table table-striped table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:auto">Matter Name</th>
+                            <th style="width:auto">Matter Number</th>
+                            <th style="width:auto">Client</th>
+                            <th style="width:auto">Start Date</th>
+                            <th style="width:auto">Close Date</th>
+                            <th style="width:auto">Matter Billing</th>
+                            <th style="width:auto">Assigned To</th>
+                            <th style="width:auto">Practice Area</th>
+                            <th style="width:auto"></th>
+                            <th style="width:auto"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="modal fade" id="capture-record" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Capture Matter</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="client_id">Client</label>
+                                            <select id="client_id" name="client_id" class="form-control selectpicker" placeholder="Select Client" style="width: 100%"></select>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="recordid" type="hidden" name="recordid" />
+                                            <label class="form-control-label" for="matter_name">Matter Name</label>
+                                            <input id="matter_name" type="text" name="matter_name" class="form-control" placeholder="Enter Matter Name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="matter_number">Matter Number</label>
+                                            <input id="matter_number" type="text" name="matter_number" class="form-control" placeholder="Enter Matter Number"/>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="start_date">Start Date</label>
+                                            <input id="start_date" type="text" name="start_date" class="form-control" placeholder="Select Matter Start Date" data-date-format="yyyy-mm-dd" style="width: 100%" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="close_date">Close Date</label>
+                                            <input id="close_date" type="text" name="close_date" class="form-control" placeholder="Select Matter Close Date" data-date-format="yyyy-mm-dd" style="width: 100%" />
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="practice_area">Practice Area</label>
+                                            <select id="practice_area" name="practice_area" class="form-control">
+                                                <option value="">Please Select Type</option>
+                                                <option value="Antitrust Law">Antitrust Law</option>
+                                                <option value="Business Law">Business Law</option>
+                                                <option value="Civil Law">Civil Law</option>
+                                                <option value="Contract Law">Contract Law</option>
+                                                <option value="Conveyancing">Conveyancing</option>
+                                                <option value="Criminal Law">Criminal Law</option>
+                                                <option value="Litigation">Litigation</option>
+                                                <option value="Real Estate Law">Real Estate Law</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="matter_status">Matter Status</label>
+                                            <select id="matter_status" name="matter_status" class="form-control">
+                                                <option value="">Please Select Type</option>
+                                                <option value="Open">Open</option>
+                                                <option value="Close">Close</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="form-control-label" for="matter_billing">Matter Billing</label>
+                                            <select id="matter_billing" name="matter_billing" class="form-control">
+                                                <option value="">Please Select Type</option>
+                                                <option value="Legal Fees">Legal Fees</option>
+                                                <option value="Hourly Rate">Hourly Rate</option>
+                                                <option value="Contingency">Contingency</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-xs-12">
+                                            <label class="form-control-label" for="user_id">Asigned To</label>
+                                            <select id="user_id" name="user_id" class="form-control selectpicker" style="width: 100%"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <label class="form-control-label" for="description">Remarks</label>
+                                            <textarea id="description" rows="3" name="description" placeholder="Enter Remarks" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-white btn-sm" id="cancel" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;Cancel</a>
+                                    <a href="#" class="btn btn-success btn-sm" id="save"><i class="fa fa-save"></i>&nbsp;Save</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+<!-- end panel-body -->
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/assets/static/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="~/assets/static/plugins/dataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/dataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/dataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/parsley/dist/parsley.js"></script>
+    <script src="~/assets/static/plugins/uploader/js/jquery.dm-uploader.min.js"></script>
+    <script src="~/assets/static/js/debugger.js"></script>
+    <script src="~/assets/static/js/sheria/matters.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+}
+

@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Registration";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registration Page</title>
+    
+
+
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link href="~/assets/static/plugins/fontawesome-free-6.1.1-web/css/all.min.css" rel="stylesheet" />
+    <!-- icheck bootstrap -->
+@*     <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css"> *@
+    <!-- Theme style -->
+    @*<link rel="stylesheet" href="~/dist/css/adminlte.min.css">*@
+
+    <link href="~/dist/css/adminlte.min.css" rel="stylesheet" />
+    <link href="~/dist/css/adminlte.css" rel="stylesheet" />
+
+  @*   <link href="~/login_v8/images/logo/data_g.jpg" rel="icon"> *@
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="#">Sign Up</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">Register a new membership</p>
+
+                <form id="Registration">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input id="recordid" type="hidden" name="recordid" />
+                            <label class="form-control-label" for="name">Name</label>
+                            <input id="name" type="text" name="name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-control-label" for="mobile">Phone Number</label>
+                            <input id="mobile" type="text" name="mobile" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-control-label" for="email">Email Address</label>
+                            <input id="email" type="text" name="email" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-control-label" for="password">Password</label>
+                            <input id="password" type="text" name="password" class="form-control" />
+                        </div>
+                    </div><br />
+                    <div class="modal-footer">
+
+                        <a href="#" class="btn btn-success btn-sm" id="save"><i class="fa fa-save"></i>&nbsp;Register</a>
+                    </div>
+
+                    <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                        Already have an account? Click <a href="~/AppAuth/AdminLogin">here</a> to Login.
+                    </div>
+                    <hr />
+                    <p class="text-center">
+                        Copyright &copy; @DateTime.Now.Year <a href="https://complaintmanagement.com" target="_blank">Complaint Management</a>.
+                        All rights reserved.
+                    </p>
+
+                </form>
+
+
+
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
+    </div>
+    <!-- /.register-box -->
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <script src="~/lib/notify.min.js"></script>
+    
+
+
+    <script type="text/javascript">
+
+
+        $('#save').click(function () {
+            var a = $(this).closest(".panel");
+
+            var recordid = document.getElementById('recordid').value;
+            var name = document.getElementById('name').value;
+            var mobile = document.getElementById('mobile').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            var role_id = 2;
+            var locked = 0;
+            var approved
+
+
+            var parameters = {
+                id: recordid,
+                mobile: mobile,
+                email: email,
+                name: name,
+                role_id: role_id,
+                locked: locked,
+                password: password
+            };
+
+            $.ajax({
+                url: " /Registration/Register",
+                type: "POST",
+                data: parameters,
+
+                success: function (data) {
+                    if (data.success) {
+
+                        $("#Registration")[0].reset();
+                        $.notify(data.message, {
+                            globalPosition: "top center",
+                            className: "success"
+                        })
+
+                    }
+                }
+
+
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+

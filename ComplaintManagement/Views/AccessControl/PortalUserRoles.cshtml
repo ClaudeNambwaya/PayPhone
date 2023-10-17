@@ -1,0 +1,315 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-eye"></i>  Access Control <small> Assign User Roles</small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("PortalUserRoles", "AccessControl")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Assign User Roles</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <select id="user" name="user" class="form-control selectpicker"></select>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <table id="unallocateddatatable" class="table table-striped table-hover table-bordered table-condensed">
+                            <thead>
+                                <tr role="row">
+                                    <th style="width:auto">Name</th>
+                                    <th style="width:auto"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <table id="allocateddatatable" class="table table-striped table-hover table-bordered table-condensed">
+                            <thead>
+                                <tr role="row">
+                                    <th style="width:auto">Name</th>
+                                    <th style="width:auto"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- end panel-body -->
+    <hr>
+</div>
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/jquery.blockUI.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+
+            var InitiateUnallocatedDataTable = function () {
+                return {
+                    init: function () {
+                        //Datatable Initiating
+                        var oTable = $('#unallocateddatatable').dataTable({
+                            "responsive": true,
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).attr("recid", data.id);
+                            },
+                            "aoColumns": [
+                              { "data": "role_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                              {
+                                  "bSortable": false,
+                                  "sDefaultContent": "<a href='#' class='btn btn-success btn-xs allocate'><i class='fas fa-check'></i> Assign</a> "
+                              }
+                            ]
+                        });
+
+                        //Allocate
+                        $('#unallocateddatatable').on("click", 'a.allocate', function (e) {
+                            e.preventDefault();
+                            var a = $(this).closest(".panel");
+
+                            nRow = $(this).parents('tr')[0];
+
+                            var aData = oTable.fnGetData(nRow);
+                            var jqTds = $('>td', nRow);
+
+                            var json = JSON.parse(JSON.stringify(aData));
+
+                            var role_id = $(nRow).attr("recid");
+                            var user_id = document.getElementById('user').value;
+
+                            var parameters = {
+                                id: 0,
+                                mode: 'allocate',
+                                parent_id: user_id,
+                                child_id: role_id,
+                            };
+
+                            $.ajax({
+                                url: "@Url.Action("CreateUserRoleMapping", "AccessControl")",
+                                type: "GET",
+                                data: parameters,
+                                beforeSend: function () {
+                                    if (!$(a).hasClass("panel-loading")) {
+                                        var t = $(a).find(".panel-body"),
+                                            i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                                        $(a).addClass("panel-loading"), $(t).prepend(i);
+                                    }
+                                },
+                                success: function (data) {
+                                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                    if (data == 'Success') {
+                                        GetUnallocatedRoles(user_id);
+                                        GetAllocatedRoles(user_id);
+                                    } else {
+                                        Swal.fire({
+                                            title: "Failed",
+                                            text: data,
+                                            icon: "error",
+                                            confirmButtonText: "Ok"
+                                        });
+                                    }
+                                },
+                                error: function (xhr, textStatus, errorThrown) {
+                                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                    Swal.fire({
+                                        title: "Failed",
+                                        text: "Mapping could not be completed " + errorThrown,
+                                        icon: "error",
+                                        confirmButtonText: "Ok"
+                                    });
+                                }
+                            });
+                        });
+                    }
+                };
+            }();
+
+            InitiateUnallocatedDataTable.init();
+
+            var InitiateAllocatedDataTable = function () {
+                return {
+                    init: function () {
+                        //Datatable Initiating
+                        var oTable = $('#allocateddatatable').dataTable({
+                            "responsive": true,
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).attr("recid", data.id);
+                            },
+                            "aoColumns": [
+                              { "data": "role_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                              {
+                                  "bSortable": false,
+                                  "sDefaultContent": "<a href='#' class='btn btn-danger btn-xs unallocate'><i class='fas fa-ban'></i> Revoke</a> "
+                              }
+                            ]
+                        });
+
+                        //Unallocate
+                        $('#allocateddatatable').on("click", 'a.unallocate', function (e) {
+                            e.preventDefault();
+                            var a = $(this).closest(".panel");
+
+                            nRow = $(this).parents('tr')[0];
+
+                            var aData = oTable.fnGetData(nRow);
+                            var jqTds = $('>td', nRow);
+
+                            var json = JSON.parse(JSON.stringify(aData));
+
+                            var id = json["id"];
+                            var user_id = json["user_id"];
+                            var role_id = json["role_id"];
+
+                            var parameters = {
+                                id: id,
+                                mode: 'unallocate',
+                                parent_id: user_id,
+                                child_id: role_id
+                            };
+
+                            $.ajax({
+                                url: "@Url.Action("CreateUserRoleMapping", "AccessControl")",
+                                type: "GET",
+                                data: parameters,
+                                beforeSend: function () {
+                                    if (!$(a).hasClass("panel-loading")) {
+                                        var t = $(a).find(".panel-body"),
+                                            i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                                        $(a).addClass("panel-loading"), $(t).prepend(i);
+                                    }
+                                },
+                                success: function (data) {
+                                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                    if (data == 'Success') {
+                                        GetUnallocatedRoles(user_id);
+                                        GetAllocatedRoles(user_id);
+                                    } else {
+                                        Swal.fire({
+                                            title: "Failed",
+                                            text: data,
+                                            icon: "error",
+                                            confirmButtonText: "Ok"
+                                        });
+                                    }
+                                },
+                                error: function (xhr, textStatus, errorThrown) {
+                                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                    Swal.fire({
+                                        title: "Failed",
+                                        text: "Mapping could not be completed " + errorThrown,
+                                        icon: "error",
+                                        confirmButtonText: "Ok"
+                                    });
+                                }
+                            });
+
+                        });
+                    }
+                };
+            }();
+
+            InitiateAllocatedDataTable.init();
+
+            var FormPlugins = function () {
+                "use strict";
+                return {
+                    init: function () {
+                        handleSelectpicker();
+                        //handleListSwap();
+                    }
+                }
+            }();
+
+            FormPlugins.init();
+
+            GetUsers();
+
+        });
+
+        handleSelectpicker = function () {
+            $(".selectpicker").select2()
+        }
+
+        function GetUsers() {
+            $.get('GetRecords', { module: 'portal_users' }, function (data) {
+                $("#user").get(0).options.length = 0;
+                $("#user").get(0).options[0] = new Option("Please Select User", "-1");
+
+                $.each(data, function (index, item) {
+                    $("#user").get(0).options[$("#user").get(0).options.length] = new Option(item.name, item.id);
+                });
+
+                $("#user").bind("change", function () {
+                    //console.log($(this).val() + ' ' + $("#user option:selected").text());
+                    GetUnallocatedRoles($(this).val());
+                    GetAllocatedRoles($(this).val());
+                });
+            });
+        }
+
+        function GetUnallocatedRoles(roleid) {
+            $.get('GetRecords', { module: 'user_unallocated_roles', param: roleid }, function (data) {
+                table = $('#unallocateddatatable').dataTable();
+                oSettings = table.fnSettings();
+                table.fnClearTable(this);
+
+                var json = $.parseJSON(JSON.stringify(data));
+                var arr = [];
+                for (var i = 0; i < json.length; i++) {
+                    var item = json[i];
+                    table.oApi._fnAddData(oSettings, item);
+                }
+                oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+                table.fnDraw();
+            });
+        }
+
+        function GetAllocatedRoles(roleid) {
+            $.get('GetRecords', { module: 'user_allocated_roles', param: roleid }, function (data) {
+                table = $('#allocateddatatable').dataTable();
+                oSettings = table.fnSettings();
+                table.fnClearTable(this);
+
+                var json = $.parseJSON(JSON.stringify(data));
+                var arr = [];
+                for (var i = 0; i < json.length; i++) {
+                    var item = json[i];
+                    table.oApi._fnAddData(oSettings, item);
+                }
+                oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+                table.fnDraw();
+            });
+        }
+    </script>
+}

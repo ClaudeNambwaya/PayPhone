@@ -1,0 +1,352 @@
+﻿@section PageStyles{
+    <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/static/css/pretty-checkbox.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+<!-- begin page-header -->
+<h1 class="page-header"><i class="fa fa-eye"></i> Access Control <small> User Roles </small></h1>
+<!-- end page-header -->
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="@Url.Action("RolesIndex", "AccessControl")" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fas fa-undo"></i></a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">Roles List</h4>
+    </div>
+    <div class="panel-body">
+        <p></p>
+        <div class="form-horizontal">
+            <div class="row">
+                <a id="editabledatatable_new" class="btn btn-sm btn-success" data-toggle="modal" data-target="#capture-role">
+                    <i class="fa fa-plus"></i> Add New
+                </a>
+                <br />
+                <br />
+            </div>
+            <div class="row">
+                <table id="editabledatatable" class="table table-striped table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:auto">Name</th>
+                            <th style="width:auto">Type</th>
+                            <th style="width:auto">Admin</th>
+                            <th style="width:auto"></th>
+                            <th style="width:auto"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="modal fade" id="capture-role" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Capture Role</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input id="recordid" type="hidden" name="recordid" />
+                                            <label class="form-control-label" for="rolename">Name</label>
+                                            <input id="rolename" type="text" name="rolename" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-control-label" for="roletype">Role Type</label>
+                                            <select id="roletype" name="roletype" class="form-control">
+                                                <option value="">Please Select Type</option>
+                                                <option value="ADMIN">ADMIN</option>
+                                                <option value="CLIENT">CLIENT</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-control-label" for="isadmin">Is System Admin</label><br />
+                                            <div class="pretty p-switch p-fill">
+                                                <input type="checkbox" id="isadmin" name="isadmin" />
+                                                <div class="state p-success">
+                                                    <i class="icon fa fa-check"></i>
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-control-label" for="remarks">Remarks</label>
+                                            <textarea id="remarks" rows="3" name="remarks" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-white btn-sm" id="cancel" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;Cancel</a>
+                                    <a href="#" class="btn btn-success btn-sm" id="save"><i class="fa fa-save"></i>&nbsp;Save</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <!-- end panel-body -->
+</div>
+<!-- end panel -->
+@section PageScripts{
+    <script src="~/assets/static/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/assets/static/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/static/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/static/js/table-manage-responsive.demo.min.js"></script>
+    <script src="~/assets/static/plugins/bootstrap-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/assets/static/js/apps.min.js"></script>
+    <script src="~/assets/static/js/jquery.blockUI.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+            //TableManageResponsive.init();
+
+            var InitiateEditableDataTable = function () {
+                return {
+                    init: function () {
+                        //Datatable Initiating
+                        var oTable = $('#editabledatatable').dataTable({
+                            "responsive": true,
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).attr("recid", data.id);
+                            },
+                            "aoColumns": [
+                                { "data": "role_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                                { "data": "role_type", "autoWidth": true, "sDefaultContent": "n/a" },
+                                {
+                                    "data": "is_sys_admin",
+                                    "autoWidth": true,
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sDefaultContent": "n/a"
+                                },
+                                {
+                                    "bSortable": false,
+                                    "sDefaultContent": "<a href='#' class='btn btn-info btn-xs edit'><i class='fa fa-edit'></i> Edit</a>"
+                                },
+                                {
+                                    "bSortable": false,
+                                    "sDefaultContent": "<a href='#' class='btn btn-danger btn-xs delete'><i class='fas fa-trash-alt'></i> Delete</a>"
+                                }
+                            ]
+                        });
+
+                        var isEditing = null;
+
+                        //Edit
+                        $('#editabledatatable').on("click", 'a.edit', function (e) {
+                            e.preventDefault();
+
+                            nRow = $(this).parents('tr')[0];
+
+                            //console.log($(this).parents('tr').attr("recid"));
+
+                            //console.log(nRow);
+
+                            if (isEditing !== null && isEditing != nRow) {
+                                //restoreRow(oTable, isEditing);
+                                editRow(oTable, nRow);
+                                isEditing = nRow;
+                            } else {
+                                editRow(oTable, nRow);
+                                isEditing = nRow;
+                            }
+                        });
+
+                        function editRow(oTable, nRow) {
+                            var aData = oTable.fnGetData(nRow);
+                            var jqTds = $('>td', nRow);
+
+                            var json = JSON.parse(JSON.stringify(aData));
+
+                            $('.modal-body #recordid').val($(nRow).attr("recid"));
+                            $('.modal-body #rolename').val(json["role_name"]);
+                            $('.modal-body #roletype').val(json["role_type"]);
+                            $('.modal-body #remarks').val(json["remarks"]);
+                            var is_sys_admin = json["is_sys_admin"];
+
+                            if (typeof is_sys_admin === 'string') {
+                                is_sys_admin = JSON.parse(json["is_sys_admin"].toLowerCase());
+                            }
+
+                            if (is_sys_admin) {
+                                $('.modal-body #isadmin').prop({ checked: true });
+                            } else {
+                                $('.modal-body #isadmin').prop({ checked: false });
+                            }
+
+                            $("#capture-role").appendTo("body").modal("show");
+                        }
+
+                        //Delete an Existing Row
+                        $('#editabledatatable').on("click", 'a.delete', function (e) {
+                            e.preventDefault();
+                            var a = $(this).closest(".panel");
+
+                            var nRow = $(this).parents('tr')[0];
+
+                            var rec = $(this).parents('tr').attr("recid");
+
+                            //console.log($(this).parents('tr').attr("recid"));
+                            Swal.fire({
+                                title: "Are you sure?",
+                                text: "You want to delete this record",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonText: "Proceed!",
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    oTable.fnDeleteRow(nRow);
+                                    //Ajax to flag as deleted
+                                    var parameters = { module: 'roles', id: rec };
+                                    $.ajax({
+                                        url: "@Url.Action("Delete", "AccessControl")",
+                                        type: "POST",
+                                        data: parameters,
+                                        beforeSend: function () {
+                                            if (!$(a).hasClass("panel-loading")) {
+                                                var t = $(a).find(".panel-body"),
+                                                    i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                                                $(a).addClass("panel-loading"), $(t).prepend(i);
+                                            }
+                                        },
+                                        success: function (data) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            Swal.fire({
+                                                title: "Deleted",
+                                                text: "Record has been deleted",
+                                                icon: "success",
+                                                confirmButtonText: "Ok"
+                                            });
+                                            getData(data);
+                                        },
+                                        error: function (xhr, textStatus, errorThrown) {
+                                            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                                            Swal.fire({
+                                                title: "Failed",
+                                                text: "Record could not be saved " + errorThrown,
+                                                icon: "error",
+                                                confirmButtonText: "Ok"
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    e.preventDefault();
+                                }
+                            });
+                        });
+                    }
+                };
+            }();
+
+            InitiateEditableDataTable.init();
+
+            GetRoles();
+        });
+
+        function GetRoles() {
+            $.get('GetRecords', { module: 'roles' }, function (data) {
+                getData(data);
+            });
+        }
+
+        function getData(jsonstring) {
+            table = $('#editabledatatable').dataTable();
+            oSettings = table.fnSettings();
+            table.fnClearTable(this);
+
+            var json = $.parseJSON(JSON.stringify(jsonstring));
+            //var json = JSON.parse(jsonstring);
+            for (var i = 0; i < json.length; i++) {
+                var item = json[i];
+                table.oApi._fnAddData(oSettings, item);
+            }
+            oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+            table.fnDraw();
+        }
+
+        $('#save').click(function () {
+            var a = $(this).closest(".panel");
+
+            var id = document.getElementById('recordid').value;
+            var role_name = document.getElementById('rolename').value;
+            var role_type = document.getElementById('roletype').value;
+            var remarks = document.getElementById('remarks').value;
+            var is_sys_admin = document.getElementById('isadmin').checked;
+
+            var parameters = {
+                id: id,
+                role_name: role_name,
+                role_type: role_type,
+                remarks: remarks,
+                is_sys_admin: is_sys_admin
+            };
+
+            $.ajax({
+                url: "@Url.Action("CreateRole", "AccessControl")",
+                type: "POST",
+                data: parameters,
+                beforeSend: function () {
+                    if (!$(a).hasClass("panel-loading")) {
+                        var t = $(a).find(".panel-body"),
+                            i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                        $(a).addClass("panel-loading"), $(t).prepend(i);
+                    }
+                },
+                success: function (data) {
+                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                    if (data == 'Success') {
+                        GetRoles();
+                        $("#capture-role").modal("hide").data("bs.modal", null);
+                    } else {
+                        Swal.fire({
+                            title: "Failed",
+                            text: data,
+                            icon: "error",
+                            confirmButtonText: "Ok"
+                        });
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+                    Swal.fire({
+                        title: "Failed",
+                        text: "Mapping could not be completed " + errorThrown,
+                        icon: "error",
+                        confirmButtonText: "Ok"
+                    });
+                }
+            });
+        });
+
+        $("#capture-role").on("hidden.bs.modal", function (e) {
+            $('#recordid').val("");
+            $('#rolename').val("");
+            $('#roletype').val("");
+            $('#remarks').val("");
+            $('input:checkbox').removeAttr('checked');
+        });
+    </script>
+}
