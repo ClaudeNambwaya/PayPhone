@@ -86,13 +86,14 @@ $(document).ready(function () {
                     console.log(json);
 
                     $('.modal-body #recordid').val($(nRow).attr("recid"));
-                    $('.modal-body #category_id').val(json["category"]);
-                    $('.modal-body #subcategory_id').val(json["subcategory"]);
-                    $('.modal-body #complaint_type').val(json["complaint"]);
+                    $('.modal-body #category_id').val(json["category_id"]);
+                    $('.modal-body #subcategory_id').val(json["subcategory_id"]);
+                    $('.modal-body #complaint_type').val(json["complaint_type"]);
                     $('.modal-body #nature_of_complaint').val(json["nature_of_complaint"]);
-                    $('.modal-body #county_id').val(json["county"]);
-                    $('.modal-body #sub_county_id').val(json["subcounty"]);
-                    $('.modal-body #ward_id').val(json["ward"]);
+                    $('.modal-body #state_id').val(json["state_id"]);
+                    $('.modal-body #county_id').val(json["county_id"]);
+                    $('.modal-body #sub_county_id').val(json["sub_county_id"]);
+                    $('.modal-body #ward_id').val(json["ward_id"]);
                     $('.modal-body #isanonymous').val(json["isanonymous"]);
                     $('.modal-body #complaint_description').val(json["complaint_description"]);
                     $('.modal-body #address').val(json["address"]);
@@ -558,7 +559,7 @@ $('#save').click(function () {
 
 
     $.ajax({
-        url: "/ManageComplaint/CreateComplaint",
+        url: "/ManageComplaint/UpdateComplaint",
         type: "POST",
         data: parameters,
         beforeSend: function () {

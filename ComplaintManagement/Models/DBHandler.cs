@@ -474,6 +474,32 @@ namespace ComplaintManagement.Models
                 return 0;
             }
         }
+        public Int64 AddRemarks(ComplaintModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_remarks", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@remarks", model.remarks);
+               
+                    
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
+                }
+                return i;
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
+                return 0;
+            }
+        }
 
         public bool AddComplaintFiles(ComplaintFilesModel model)
         {
@@ -544,7 +570,33 @@ namespace ComplaintManagement.Models
                 return false;
             }
         }
+        public bool UpdateRemarks(ComplaintModel model)
+        {
+            try
+            {
+                int i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("update_remarks", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@in_id", model.id);
+                    cmd.Parameters.AddWithValue("@in_remarks", model.remarks);
 
+                    i = (int)cmd.ExecuteNonQuery();
+                }
+
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "UpdateComplaint | Exception ->" + ex.Message);
+                return false;
+            }
+        }
         public bool Update_Open_Complaint_Status(Int64 id, string module, string param1 = "", DataBaseObject database = DataBaseObject.HostDB)
         {
             try

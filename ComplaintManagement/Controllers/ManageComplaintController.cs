@@ -49,7 +49,7 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateComplaint(complaintrecord record)
+        public ActionResult UpdateComplaint(complaintrecord record)
         {
             if (HttpContext.Session.GetString("name") == null)
                 return RedirectToAction("AdminLogin", "AppAuth");
@@ -82,7 +82,7 @@ namespace ComplaintManagement.Controllers
 
                         };
 
-                        if (dbhandler.UpdateComplaint(mymodel))
+                        if (dbhandler.UpdateRemarks(mymodel))
                         {
                             // CaptureAuditTrail("Updated name", "name: " + mymodel.name);
 
