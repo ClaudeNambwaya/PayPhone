@@ -224,6 +224,19 @@ $(document).ready(function () {
 
     InitiateEditableDataTable.init();
 
+  
+        // Add an event listener for the checkbox change event
+        $('#isanonymous').on('change', function () {
+            // Check if the checkbox is checked
+            if ($(this).is(':checked')) {
+                // If checked, set the value of isanonymous to true
+                $('#isanonymous').val(true);
+            } else {
+                // If not checked, set the value of isanonymous to false
+                $('#isanonymous').val(false);
+            }
+        });
+
     var FormPlugins = function () {
         "use strict";
         return {
