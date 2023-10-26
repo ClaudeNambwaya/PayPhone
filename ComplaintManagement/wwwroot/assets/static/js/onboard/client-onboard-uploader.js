@@ -6,10 +6,10 @@
      * UI functions ui_* can be located in: debbuger.js
      */
     $('#drag-and-drop-zone').dmUploader({ //
-        url: '/ClientManagement/Upload',
+        url: '/ComplaintRegistration/Upload',
         extFilter: ["doc", "docx", "pdf", "jpg", "jpeg", "png", "gif"],
         fieldName: 'postedFiles',
-        maxFileSize: 3000000, // 3 Megs 
+        maxFileSize: 9000000, // 3 Megs 
         onDragEnter: function () {
             // Happens when dragging something over the DnD area
             this.addClass('active');
@@ -25,12 +25,20 @@
         onComplete: function () {
             // All files in the queue are processed (success or error)
             //ui_add_log('All pending tranfers finished');
+        //},
+        //onNewFile: function (id, file) {
+        //    // When a new file is added using the file selector or the DnD area
+        //    //ui_add_log('New file added ' + file.name);
+        //   ui_multi_add_file(id, file, 'uploaderFile', 'files');
+        //    //$('#uploadedFiles').append(file.name + '|<br />');
         },
         onNewFile: function (id, file) {
-            // When a new file is added using the file selector or the DnD area
-            //ui_add_log('New file added ' + file.name);
+            //// When a new file is added using the file selector or the DnD area
+            //ui_add_log('New file added #' + id);
             ui_multi_add_file(id, file, 'uploaderFile', 'files');
             //$('#uploadedFiles').append(file.name + '|<br />');
+            //document.getElementById("label_national_id").innerHTML = file.name;
+            //document.getElementById("label_text_national_id").value = file.name;
         },
         onBeforeUpload: function (id) {
             // about to start uploading a file
@@ -47,6 +55,26 @@
             // Updating file progress
             ui_multi_update_file_progress(id, percent, '', true, 'uploaderFile');
         },
+
+        //onUploadSuccess: function (id, data) {
+        //    // A file was successfully uploaded
+        //    console.log(data);
+        //    var json = $.parseJSON(JSON.stringify(data));
+        //    for (var i = 0; i < json.length; i++) {
+        //        var item = json[i];
+        //        console.log(item);
+        //        $('#uploadedFiles').append(item.new_file_name.trim() + "," + item.original_file_name.trim() + '|<br />');
+        //        //document.getElementById("label_national_id").innerHTML = item.original_file_name;
+        //        document.getElementById("label_national_id").innerHTML = item.original_file_name;
+        //        document.getElementById("label_text_national_id").value = item.new_file_name;
+        //        ui_add_log('Server Response for file #' + id + ': ' + item.new_file_name);
+        //        ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
+        //        ui_multi_update_file_status(id, 'success', 'Upload Complete', 'uploaderFile-ids');
+        //        ui_multi_update_file_progress(id, 100, 'success', false, 'uploaderFile-ids');
+        //    }
+
+        //    console.log(document.getElementById("uploadedFiles").innerHTML.trim());
+        //},
         onUploadSuccess: function (id, data) {
             console.log(data);
             // A file was successfully uploaded
@@ -54,12 +82,15 @@
             for (var i = 0; i < json.length; i++) {
                 var item = json[i];
                 var li = '<li>' + item.new_file_name + '</li>';
+                console.log(li);
                 $("#uploadedFilesList ul").append(li);
 
                 if (i === 0)
-                    $('#uploadedFiles').append(item.new_file_name.trim() + '|<br />');
+                    /*$('#uploadedFiles').append(item.new_file_name.trim() + '|<br />');*/
+                $('#uploadedFiles').append(item.new_file_name.trim() + "," + item.original_file_name.trim() + '|<br />');
                 else
-                    $('#uploadedFiles').append('|' + item.new_file_name);
+                    /* $('#uploadedFiles').append('|' + item.new_file_name);*/
+                    $('#uploadedFiles').append('|' + item.new_file_name + "," + item.original_file_name);
 
                 //ui_add_log('Server Response for file #' + item.new_file_name);
                 ui_add_log('Upload of file <b>' + item.original_file_name + '</b> COMPLETED', 'success');
@@ -68,24 +99,8 @@
 
 
 
-                //var item = json[i];
-                //$('#uploadedFiles').append(item.new_file_name.trim() + '|<br />');
-                //document.getElementById("label_national_id").innerHTML = item.original_file_name;
-                //document.getElementById("label_text_national_id").value = item.new_file_name;
-                //ui_add_log('Server Response for file #' + id + ': ' + item.new_file_name);
-                //ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
-                //ui_multi_update_file_status(id, 'success', 'Upload Complete', 'uploaderFile-ids');
-                //ui_multi_update_file_progress(id, 100, 'success', false, 'uploaderFile-ids');
-
-
-
-
-
-
-
-
             }
-            //console.log(document.getElementById("uploadedFiles").innerHTML.trim());
+            console.log(document.getElementById("uploadedFiles").innerHTML.trim());
         },
         onUploadError: function (id, xhr, status, message) {
             ui_multi_update_file_status(id, 'danger', message, 'uploaderFile');

@@ -9,6 +9,7 @@ using ComplaintManagement.Models;
 using Org.BouncyCastle.Asn1.Ocsp;
 using static ComplaintManagement.Helpers.CryptoHelper;
 using static ComplaintManagement.Helpers.HttpClientHelper;
+using static Grpc.Core.Metadata;
 
 namespace ComplaintManagement.Controllers
 {
@@ -90,7 +91,8 @@ namespace ComplaintManagement.Controllers
                         mobile = record.mobile,
                         email = record.email,
                         name = record.name,
-                        password = Cryptographer.Encrypt(randomkeymanager.GenerateRandomAlphaNumericString(7)).Replace("=", ""),
+                        password = Cryptographer.Encrypt(record.password).Replace("=", ""),
+                        //password = Cryptographer.Encrypt(randomkeymanager.GenerateRandomAlphaNumericString(7)).Replace("=", ""),
                         locked = record.locked,
                         sec_key = randomkeymanager.GenerateRandomAlphaNumericString(16).ToUpper(),
                         avatar = "user.jpg"

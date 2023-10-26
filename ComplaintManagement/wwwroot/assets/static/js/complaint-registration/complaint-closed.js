@@ -43,11 +43,7 @@ $(document).ready(function () {
                         },
                         {
                             "bSortable": false,
-                            "sDefaultContent": "<a href='#' class='btn btn-info btn-xs edit'><i class='fa fa-edit'></i> View</a>"
-                        },
-                        {
-                            "bSortable": false,
-                            "sDefaultContent": "<a href='#' class='btn btn-danger btn-xs delete'><i class='fas fa-trash-alt'></i> Delete</a>"
+                            "sDefaultContent": "<a href='#' class='btn btn-info btn-xs view'><i class='fas fa-eye'></i> View</a>"
                         }
                     ]
                 });
@@ -89,9 +85,12 @@ $(document).ready(function () {
                     $('.modal-body #county_id').val(json["county"]);
                     $('.modal-body #sub_county_id').val(json["subcounty"]);
                     $('.modal-body #ward_id').val(json["ward"]);
-                    $('.modal-body #isanonymous').val(json["isanonymous"]);
+                    $('.modal-body #isanonymous').val(json["complainant_name"]);
                     $('.modal-body #complaint_description').val(json["complaint_description"]);
                     $('.modal-body #address').val(json["address"]);
+                    $('.modal-body #state_id').val(json["state_id"]);
+                    $('.modal-body #remarks').val(json["remarks"]);
+
 
                     //var rec = json["id"];
                     //GetDocuments(rec);
@@ -162,62 +161,62 @@ $(document).ready(function () {
                 });
                 });
 
-                var isEditing = null;
+                //var isEditing = null;
 
-                //Edit
-                $('#complaintsdatatable').on("click", 'a.edit', function (e) {
-                    e.preventDefault();
+                ////Edit
+                //$('#complaintsdatatable').on("click", 'a.edit', function (e) {
+                //    e.preventDefault();
 
-                    nRow = $(this).parents('tr')[0];
+                //    nRow = $(this).parents('tr')[0];
 
-                    //console.log($(this).parents('tr').attr("recid"));
+                //    //console.log($(this).parents('tr').attr("recid"));
 
-                    //console.log(nRow);
+                //    //console.log(nRow);
 
-                    if (isEditing !== null && isEditing != nRow) {
-                        //restoreRow(oTable, isEditing);
-                        editRow(oTable, nRow);
-                        isEditing = nRow;
-                    } else {
-                        editRow(oTable, nRow);
-                        isEditing = nRow;
-                    }
-                });
-
-
-                function editRow(oTable, nRow) {
-                    var aData = oTable.fnGetData(nRow);
-                    var jqTds = $('>td', nRow);
-
-                    var json = JSON.parse(JSON.stringify(aData));
-
-                    console.log(json);
+                //    if (isEditing !== null && isEditing != nRow) {
+                //        //restoreRow(oTable, isEditing);
+                //        editRow(oTable, nRow);
+                //        isEditing = nRow;
+                //    } else {
+                //        editRow(oTable, nRow);
+                //        isEditing = nRow;
+                //    }
+                //});
 
 
-                    $('.modal-body #recordid').val($(nRow).attr("recid"));
-                    $('.modal-body #category_id').val(json["category_id"]).trigger("change");
-                    //selected_sub_category = json["subcategory_id"];
-                    $('.modal-body #subcategory_id').val(json["subcategory_id"]).trigger("change");
-                    $('.modal-body #complaint_type').val(json["complaint_type"]).trigger("change");
-                    $('.modal-body #nature_of_complaint').val(json["nature_of_complaint"]);
-                    $('.modal-body #county_id').val(json["county_id"]).trigger("change");
-                    $('.modal-body #sub_county_id').val(json["sub_county_id"]).trigger("change");
-                    $('.modal-body #ward_id').val(json["ward_id"]).trigger("change");
-                    $('.modal-body #isanonymous').val(json["isanonymous"]);
-                    $('.modal-body #complaint_description').val(json["complaint_description"]);
-                    $('.modal-body #address').val(json["address"]);
-                    $('.modal-body #state_Id').val(json["state_Id"]);
+                //function editRow(oTable, nRow) {
+                //    var aData = oTable.fnGetData(nRow);
+                //    var jqTds = $('>td', nRow);
+
+                //    var json = JSON.parse(JSON.stringify(aData));
+
+                //    console.log(json);
+
+
+                //    $('.modal-body #recordid').val($(nRow).attr("recid"));
+                //    $('.modal-body #category_id').val(json["category_id"]).trigger("change");
+                //    //selected_sub_category = json["subcategory_id"];
+                //    $('.modal-body #subcategory_id').val(json["subcategory_id"]).trigger("change");
+                //    $('.modal-body #complaint_type').val(json["complaint_type"]).trigger("change");
+                //    $('.modal-body #nature_of_complaint').val(json["nature_of_complaint"]);
+                //    $('.modal-body #county_id').val(json["county_id"]).trigger("change");
+                //    $('.modal-body #sub_county_id').val(json["sub_county_id"]).trigger("change");
+                //    $('.modal-body #ward_id').val(json["ward_id"]).trigger("change");
+                //    $('.modal-body #isanonymous').val(json["isanonymous"]);
+                //    $('.modal-body #complaint_description').val(json["complaint_description"]);
+                //    $('.modal-body #address').val(json["address"]);
+                //    $('.modal-body #state_Id').val(json["state_Id"]);
 
                     
 
-                    var category = document.getElementById('category_id').value;
-                    console.log(category);
-                    //selected_sub_county = json["sub_county_id"];
-                    //selected_ward = json["ward_id"];
-                    GetSubcategory(category);
+                //    var category = document.getElementById('category_id').value;
+                //    console.log(category);
+                //    //selected_sub_county = json["sub_county_id"];
+                //    //selected_ward = json["ward_id"];
+                //    GetSubcategory(category);
 
-                    $("#capture-record").appendTo("body").modal("show");
-                }
+                //    $("#capture-record").appendTo("body").modal("show");
+                //}
 
                 //Delete an Existing Row
                 $('#complaintsdatatable').on("click", 'a.delete', function (e) {
@@ -337,18 +336,24 @@ function getData(table, jsonstring) {
 }
 
 function GetCategory() {
-    $.get('GetRecords', { module: 'category_record' }, function (data) {
+    // Use a variable to store the select element
+    var categorySelect = $("#category_id");
 
-        $("#category_id").get(0).options.length = 0;
-        $("#category_id").get(0).options[0] = new Option("Please Select Category", "-1");
+    $.get('GetRecords', { module: 'category_record' }, function (data) {
+        // Clear the options in the select element
+        categorySelect.empty();
+
+        // Add the default "Please Select Category" option
+        categorySelect.append(new Option("Please Select Category", "-1"));
 
         $.each(data, function (index, item) {
-            $("#category_id").get(0).options[$("#category_id").get(0).options.length] = new Option(item.category_name, item.id);
+            // Add options for each category in the data
+            categorySelect.append(new Option(item.category_name, item.id));
         });
 
-        $("#category_id").bind("change", function () {
+        // Bind the change event to the select element
+        categorySelect.on("change", function () {
             console.log("category_id:" + $(this).val());
-
             GetSubcategory($(this).val());
         });
     });
@@ -386,39 +391,49 @@ function GetCategory() {
 
 
 function GetComplaint_Type() {
+    // Use a variable to store the select element
+    var complaint_type_Select = $("#complaint_type");
+
     $.get('GetRecords', { module: 'complaint_type_record' }, function (data) {
-        $("#complaint_type").get(0).options.length = 0;
-        $("#complaint_type").get(0).options[0] = new Option("Please Select Complaint Type", "-1");
+        // Clear the options in the select element
+        complaint_type_Select.empty();
+
+        // Add the default "Please Select Category" option
+        complaint_type_Select.append(new Option("Please Select Complaint Type", "-1"));
 
         $.each(data, function (index, item) {
-            $("#complaint_type").get(0).options[$("#complaint_type").get(0).options.length] = new Option(item.complaint_name, item.id);
+            // Add options for each category in the data
+            complaint_type_Select.append(new Option(item.complaint_name, item.id));
         });
 
-        $("#complaint_type").bind("change", function () {
-            /*GetTopics($(this).val());*/
-            //console.log($(this).val() + ' ' + $("#program option:selected").text());
+        // Bind the change event to the select element
+        complaint_type_Select.on("change", function () {
         });
     });
 }
 
 function GetCounty() {
-    $.get('GetRecords', { module: 'county_record' }, function (data) {
+    // Use a variable to store the select element
+    var countySelect = $("#county_id");
 
-        $("#county_id").get(0).options.length = 0;
-        $("#county_id").get(0).options[0] = new Option("Please Select County", "-1");
+    $.get('GetRecords', { module: 'county_record' }, function (data) {
+        // Clear the options in the select element
+        countySelect.empty();
+
+        // Add the default "Please Select Category" option
+        countySelect.append(new Option("Please Select County", "-1"));
 
         $.each(data, function (index, item) {
-            $("#county_id").get(0).options[$("#county_id").get(0).options.length] = new Option(item.county_name, item.id);
+            // Add options for each category in the data
+            countySelect.append(new Option(item.county_name, item.id));
         });
 
-        $("#county_id").bind("change", function () {
-            console.log("county_id:" + $(this).val());
-
-            GetSubCounty($(this).val());
+        // Bind the change event to the select element
+        countySelect.on("change", function () {
+            GetSubcategory($(this).val());
         });
     });
 }
-
 function GetSubCounty(county_id) {
     $.get('GetRecords', { module: 'subcountybyid', param: county_id }, function (data) {
         console.log(data);

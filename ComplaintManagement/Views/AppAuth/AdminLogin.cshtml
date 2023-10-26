@@ -22,7 +22,7 @@
     <link href="~/assets/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     @*<link href="~/assets/static/plugins/fontawesome-5.15.3/css/fontawesome.min.css" rel="stylesheet" />*@
     <link href="~/assets/static/css/animate.min.css" rel="stylesheet" />
-    <link href="~/desiredfont.css" rel="stylesheet" />
+    <link href="~/assets/desiredfont.css" rel="stylesheet" />
     <link href="~/login/style.min.css" rel="stylesheet" />
     <link href="~/assets/static/css/style-responsive.min.css" rel="stylesheet" />
     <link href="~/login/default.css" rel="stylesheet" id="theme" />
@@ -58,7 +58,7 @@
                     </div>
                     @*<img class="madison-logo"<i class="fa-solid fa-heart-pulse"></i>" alt="Madison logo" />*@
                     @*<img class="madison-logo" src="~/assets/static/img/brand2d/madison-logo.png" alt="Madison logo" />*@
-                    
+
                     <form action="/AppAuth/AdminLogin" method="POST" class="margin-bottom-0">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         @Html.HiddenFor(s => s.ReturnURL)
@@ -89,7 +89,7 @@
                             </div>
                             <button id="login" name="login" type="submit" class="btn btn-primary btn-block btn-sm">Sign In</button>
                             <br />
-                            <a href="@Url.Action("Register", "Registration")" title="Existing customer? Click here to sign up" class="btn btn-success btn-block btn-sm">Sign Up</a>
+                            <a href="@Url.Action("ClientRegister", "Home")" title="Existing customer? Click here to sign up" class="btn btn-success btn-block btn-sm">Sign Up</a>
                             <br />
                             New customer? Click here to join as <a href="@Url.Action("ClientOnboardInd", "Home")" title="Individual">individual</a>, <a href="@Url.Action("ClientOnboardJoi", "Home")" title="Joint">joint</a>  or as a <a href="@Url.Action("ClientOnboardCorp", "Home")" title="Corporate">corporate</a>
                         </div>

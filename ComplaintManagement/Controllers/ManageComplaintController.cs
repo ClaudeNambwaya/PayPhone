@@ -48,43 +48,102 @@ namespace ComplaintManagement.Controllers
             }
         }
 
+        //[HttpPost]
+        //public ActionResult UpdateComplaint(complaintrecord record)
+        //{
+        //    if (HttpContext.Session.GetString("name") == null)
+        //        return RedirectToAction("AdminLogin", "AppAuth");
+        //    else
+        //    {
+        //        if (record.category_id == null)
+        //            return Content("Invalid name");
+        //        if (record.complaint_type == null)
+        //            return Content("Invalid name");
+
+        //        try
+        //        {
+        //            ComplaintModel existingrecord = dbhandler.GetComplaint().Find(mymodel => mymodel.id == record.id)!;
+        //            if (existingrecord != null)
+        //            {
+        //                ComplaintModel mymodel = new ComplaintModel
+        //                {
+        //                    id = existingrecord.id,
+        //                    category_id = record.category_id,
+        //                    subcategory_id = record.subcategory_id,
+        //                    complaint_type = record.complaint_type,
+        //                    nature_of_complaint = record.nature_of_complaint,
+        //                    complaint_description = record.complaint_description,
+        //                    county_id = record.county_id,
+        //                    sub_county_id = record.sub_county_id,
+        //                    ward_id = record.ward_id,
+        //                    address = record.address,
+        //                    isanonymous = record.isanonymous,
+        //                    remarks = record.remarks
+
+        //                };
+
+        //                if (dbhandler.UpdateRemarks(mymodel))
+        //                {
+        //                    // CaptureAuditTrail("Updated name", "name: " + mymodel.name);
+
+        //                    ModelState.Clear();
+        //                    return Content("Success");
+        //                }
+        //                else
+        //                    return Content("Could not update Complaint, kindly contact system admin");
+        //            }
+        //            else
+        //            {
+        //                ComplaintModel mymodel = new ComplaintModel
+        //                {
+
+        //                    category_id = record.category_id,
+        //                    subcategory_id = record.subcategory_id,
+        //                    complaint_type = record.complaint_type,
+        //                    nature_of_complaint = record.nature_of_complaint,
+        //                    complaint_description = record.complaint_description,
+        //                    county_id = record.county_id,
+        //                    sub_county_id = record.sub_county_id,
+        //                    ward_id = record.ward_id,
+        //                    address = record.address,
+        //                    isanonymous = record.isanonymous,
+        //                    remarks = record.remarks
+
+
+        //                };
+                        
+        //                    Int64 complaint_id = dbhandler.AddComplaint(mymodel);
+
+
+        //                    return Content("Success");
+                      
+        //            }
+        //        }
+        //        catch
+        //        {
+        //            return Content("Could not create topic, kindly contact system admin");
+        //        }
+        //    }
+        //}
+        
         [HttpPost]
-        public ActionResult UpdateComplaint(complaintrecord record)
+        public ActionResult MakeRemarks(Int64 id, string description)
         {
+         
             if (HttpContext.Session.GetString("name") == null)
                 return RedirectToAction("AdminLogin", "AppAuth");
             else
             {
-                if (record.category_id == null)
-                    return Content("Invalid name");
-                if (record.complaint_type == null)
-                    return Content("Invalid name");
 
                 try
                 {
-                    ComplaintModel existingrecord = dbhandler.GetComplaint().Find(mymodel => mymodel.id == record.id)!;
+                    ComplaintModel existingrecord = dbhandler.GetComplaintRecord().Find(mymodel => mymodel.id == id)!;
                     if (existingrecord != null)
                     {
-                        ComplaintModel mymodel = new ComplaintModel
-                        {
-                            id = existingrecord.id,
-                            category_id = record.category_id,
-                            subcategory_id = record.subcategory_id,
-                            complaint_type = record.complaint_type,
-                            nature_of_complaint = record.nature_of_complaint,
-                            complaint_description = record.complaint_description,
-                            county_id = record.county_id,
-                            sub_county_id = record.sub_county_id,
-                            ward_id = record.ward_id,
-                            address = record.address,
-                            isanonymous = record.isanonymous,
-                            remarks = record.remarks
+                        id = existingrecord.id;
 
-                        };
-
-                        if (dbhandler.UpdateRemarks(mymodel))
+                        if (dbhandler.UpdateRemarks(id, description))
                         {
-                            // CaptureAuditTrail("Updated name", "name: " + mymodel.name);
 
                             ModelState.Clear();
                             return Content("Success");
@@ -94,29 +153,8 @@ namespace ComplaintManagement.Controllers
                     }
                     else
                     {
-                        ComplaintModel mymodel = new ComplaintModel
-                        {
+                        return Content("Could not update Complaint, kindly contact system admin");
 
-                            category_id = record.category_id,
-                            subcategory_id = record.subcategory_id,
-                            complaint_type = record.complaint_type,
-                            nature_of_complaint = record.nature_of_complaint,
-                            complaint_description = record.complaint_description,
-                            county_id = record.county_id,
-                            sub_county_id = record.sub_county_id,
-                            ward_id = record.ward_id,
-                            address = record.address,
-                            isanonymous = record.isanonymous,
-                            remarks = record.remarks
-
-
-                        };
-                        
-                            Int64 complaint_id = dbhandler.AddComplaint(mymodel);
-
-
-                            return Content("Success");
-                      
                     }
                 }
                 catch
@@ -212,19 +250,19 @@ namespace ComplaintManagement.Controllers
                         case "role_allocated_permissions":
                         case "user_unallocated_roles":
                         case "user_allocated_roles":
-                            datatable = dbhandler.GetRecordsById(module, Convert.ToInt64(param));
+                            datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));
                             break;
-                        case "subcategorybyid":
-                            datatable = dbhandler.GetRecordsById(module, Convert.ToInt64(param));
-                            break;
+                        //case "subcategorybyid":
+                        //    datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));
+                        //    break;
 
-                        case "subcountybyid":
-                            datatable = dbhandler.GetRecordsById(module, Convert.ToInt64(param));
-                            break;
+                        //case "subcountybyid":
+                        //    datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));
+                        //    break;
 
-                        case "wardbyid":
-                            datatable = dbhandler.GetRecordsById(module, Convert.ToInt64(param));
-                            break;
+                        //case "wardbyid":
+                        //    datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));
+                        //    break;
 
                         default:
                             datatable = dbhandler.GetRecords(module);

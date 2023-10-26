@@ -245,12 +245,13 @@ $(document).ready(function () {
     
 });
 
+var applicants = [];
 handleSelectpicker = function () {
     $(".selectpicker").select2()
 }
 
 function GetComplaintRegistration() {
-    $.get('GetRecords', { module: 'complaint_record' }, function (data) {
+    $.get('GetRecords', { module: 'complaint_record_byId' }, function (data) {
         table = $('#complaintsdatatable').dataTable();
         getData(table, data);
     });
@@ -544,8 +545,10 @@ $('#save').click(function () {
     var address = document.getElementById('address').value;
     var isanonymous = document.getElementById('isanonymous').value;
 
-    var parameters = {
-        id: id,
+    var cnt = applicants.length;
+
+    var applicant = {
+        id: cnt + 1,
         category_id: category_id,
         subcategory_id: subcategory_id,
         complaint_type: complaint_type,
@@ -558,6 +561,16 @@ $('#save').click(function () {
         isanonymous: isanonymous
     };
 
+    applicants.push(applicant);
+
+    const container = document.getElementById('uploadedFiles');
+    const complainant_files = container.textContent.trim();
+
+    var parameters = {
+        applicant_details: applicants,
+        complainant_files: complainant_files
+    };
+    console.log(parameters);
 
     $.ajax({
         url: "/ComplaintRegistration/CreateComplaint",

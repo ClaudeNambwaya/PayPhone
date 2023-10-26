@@ -5,6 +5,8 @@ using System.Collections;
 using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Nancy;
 
 namespace ComplaintManagement.Controllers
 {
@@ -21,13 +23,13 @@ namespace ComplaintManagement.Controllers
             dbhandler = mydbhandler;
         }
 
-        public class onboardingrecord
+        public class onboarding_record
         {
-            public complaintrecord[]? applicant_details { get; set; }
+            public complaint_record[]? applicant_details { get; set; }
             public string? complainant_files { get; set; }
         }
 
-        public class complaintrecord
+        public class complaint_record
         {
             public Int64 id { get; set; }
             public Int64 category_id { get; set; }
@@ -42,7 +44,7 @@ namespace ComplaintManagement.Controllers
             public bool isanonymous { get; set; }
             public string? remarks { get; set; }
         }
-        public class processingresponse
+        public class processing_response
         {
             public string? error_code { get; set; }
             public string? error_desc { get; set; }
@@ -65,40 +67,123 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateComplaint(complaintrecord record)
+        public ActionResult CreateComplaint(onboarding_record record)
         {
+            processing_response response = new processing_response
+            {
+                system_ref = DateTime.Now.ToString("yyyyMMddHHssfff")
+            };
+
             if (HttpContext.Session.GetString("name") == null)
                 return RedirectToAction("AdminLogin", "AppAuth");
             else
             {
-                if (record.category_id == null)
-                    return Content("Invalid name");
-                if (record.complaint_type == null)
-                    return Content("Invalid name");
+                if (record.applicant_details![0].category_id == -1 || record.applicant_details![0].category_id == 0 )
+                    return Content("Invalid Category");
+                if (record.applicant_details![0].nature_of_complaint == null)
+                    return Content("Invalid nature_of_complaint");
 
                 try
                 {
-                    ComplaintModel existingrecord = dbhandler.GetComplaint().Find(mymodel => mymodel.id == record.id)!;
+                    string[] complainant_files;
+
+                    ComplaintModel existingrecord = dbhandler.GetComplaint().Find(mymodel => mymodel.id == record.applicant_details![0].id)!;
                     if (existingrecord != null)
                     {
                         ComplaintModel mymodel = new ComplaintModel
                         {
                             id = existingrecord.id,
-                            category_id = record.category_id,
-                            subcategory_id = record.subcategory_id,
-                            complaint_type = record.complaint_type,
-                            nature_of_complaint = record.nature_of_complaint,
-                            complaint_description = record.complaint_description,
-                            county_id = record.county_id,
-                            sub_county_id = record.sub_county_id,
-                            ward_id = record.ward_id,
-                            address = record.address,
-                            isanonymous = record.isanonymous,
-                            remarks = record.remarks
+                            category_id = record.applicant_details![0].category_id,
+                            subcategory_id = record.applicant_details![0].subcategory_id,
+                            complaint_type = record.applicant_details![0].complaint_type,
+                            nature_of_complaint = record.applicant_details![0].nature_of_complaint,
+                            complaint_description = record.applicant_details![0].complaint_description,
+                            county_id = record.applicant_details![0].county_id,
+                            sub_county_id = record.applicant_details![0].sub_county_id,
+                            ward_id = record.applicant_details![0].ward_id,
+                            address = record.applicant_details![0].address,
+                            isanonymous = record.applicant_details![0].isanonymous,
+                            remarks = record.applicant_details![0].remarks,
+                            user_id = HttpContext.Session.GetString("userid")
                         };
 
                         if (dbhandler.UpdateComplaint(mymodel))
                         {
+
+                            //2. Update customer files records
+                            if (record.complainant_files == null)
+                            {
+                                response.error_code = "00";
+                                response.error_desc = "File updated successfully";
+                            }
+                            else
+                            {
+                                complainant_files = record.complainant_files.Trim().Split('|');
+                                complainant_files = complainant_files.Take(complainant_files.Count() - 1).ToArray();
+
+
+
+                                for (int i = 0; i < complainant_files.Length; i++)
+                                {
+                                    try
+                                    {
+                                        string[] filedata = complainant_files[i].Split(',');
+                                        string file_number = filedata[0];
+                                        string file_name = filedata[1];
+
+                                        ComplaintFilesModel filesmodel = new ComplaintFilesModel
+                                        {
+                                            complaint_id = existingrecord.id,
+                                            file_number = file_number,
+                                            file_name = file_name,
+                                        };
+
+
+                                        ComplaintFilesModel existingfilerecord = dbhandler.GetComplaintFiles("complaint_files", Convert.ToString(existingrecord.id)).Find(mymodel1 => mymodel1.file_number != null)!;
+
+                                        if (existingfilerecord != null)
+                                        {
+                                           // dbhandler.UpdateComplaintFilesDocumentData(Convert.ToInt64(filesmodel.principal_id), Convert.ToInt16(Session["userid"]), filesmodel.file_type, filesmodel.client_files);
+                                        }
+                                        else
+                                        {
+                                            try
+                                            {
+                                                if (dbhandler.Addcomplaint_Files(filesmodel))
+                                                {
+                                                    response.error_code = "00";
+                                                    response.error_desc = "File created successfully";
+                                                }
+                                                else
+                                                {
+                                                    response.error_code = "01";
+                                                    response.error_desc = "Client not created successfully, kindly contact admin";
+                                                }
+                                                
+
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
+                                                response.error_code = "01";
+                                                response.error_desc = "Exception raised on customer file (" + file_number[i] + ") saving " + ex;
+                                            }
+                                            //}
+                                        }
+
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
+                                        response.error_code = "01";
+                                        response.error_desc = "Exception raised on customer file (" + complainant_files[i] + ") saving " + ex;
+                                    }
+                                }
+
+                            }
+
+
                             // CaptureAuditTrail("Updated name", "name: " + mymodel.name);
 
                             ModelState.Clear();
@@ -112,22 +197,97 @@ namespace ComplaintManagement.Controllers
                         ComplaintModel mymodel = new ComplaintModel
                         {
 
-                            category_id = record.category_id,
-                            subcategory_id = record.subcategory_id,
-                            complaint_type = record.complaint_type,
-                            nature_of_complaint = record.nature_of_complaint,
-                            complaint_description = record.complaint_description,
-                            county_id = record.county_id,
-                            sub_county_id = record.sub_county_id,
-                            ward_id = record.ward_id,
-                            address = record.address,
-                            isanonymous = record.isanonymous,
-                            remarks = record.remarks
+                            category_id = record.applicant_details![0].category_id,
+                            subcategory_id = record.applicant_details![0].subcategory_id,
+                            complaint_type = record.applicant_details![0].complaint_type,
+                            nature_of_complaint = record.applicant_details![0].nature_of_complaint,
+                            complaint_description = record.applicant_details![0].complaint_description,
+                            county_id = record.applicant_details![0].county_id,
+                            sub_county_id = record.applicant_details![0].sub_county_id,
+                            ward_id = record.applicant_details![0].ward_id,
+                            address = record.applicant_details![0].address,
+                            isanonymous = record.applicant_details![0].isanonymous,
+                            remarks = record.applicant_details![0].remarks,
+                            user_id = HttpContext.Session.GetString("userid")
 
                         };
 
                         Int64 complaint_id = dbhandler.AddComplaint(mymodel);
 
+                        //2. Update customer files records
+                        if (record.complainant_files == null)
+                        {
+                            response.error_code = "00";
+                            response.error_desc = "File updated successfully";
+                        }
+                        else
+                        {
+                            complainant_files = record.complainant_files.Trim().Split('|');
+                            complainant_files = complainant_files.Take(complainant_files.Count() - 1).ToArray();
+
+
+
+                            for (int i = 0; i < complainant_files.Length; i++)
+                            {
+                                try
+                                {
+                                    string[] filedata = complainant_files[i].Split(',');
+                                    string file_number = filedata[0];
+                                    string file_name = filedata[1];
+
+                                    ComplaintFilesModel filesmodel = new ComplaintFilesModel
+                                    {
+                                        complaint_id = complaint_id,
+                                        file_number = file_number,
+                                        file_name = file_name,
+                                    };
+
+
+                                   // ComplaintFilesModel existingfilerecord = dbhandler.GetComplaintFiles(Convert.ToString(existingrecord!.id)).Find(model => model.file_number == file_number);
+
+                                    if (filesmodel == null)
+                                    {
+                                        response.error_code = "00";
+                                        response.error_desc = "File created successfully";
+                                        // dbhandler.UpdateComplaintFilesDocumentData(Convert.ToInt64(filesmodel.principal_id), Convert.ToInt16(Session["userid"]), filesmodel.file_type, filesmodel.client_files);
+                                    }
+                                    else
+                                    {
+                                        try
+                                        {
+                                            if (dbhandler.Addcomplaint_Files(filesmodel))
+                                            {
+                                                response.error_code = "00";
+                                                response.error_desc = "File created successfully";
+                                            }
+                                            else
+                                            {
+                                                response.error_code = "01";
+                                                response.error_desc = "Client not created successfully, kindly contact admin";
+                                            }
+
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
+                                            response.error_code = "01";
+                                            response.error_desc = "Exception raised on customer file (" + file_number[i] + ") saving " + ex;
+                                        }
+                                        //}
+                                    }
+
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
+                                    response.error_code = "01";
+                                    response.error_desc = "Exception raised on customer file (" + complainant_files[i] + ") saving " + ex;
+                                }
+                            }
+
+                        }
 
                         return Content("Success");
 
@@ -139,111 +299,7 @@ namespace ComplaintManagement.Controllers
                 }
             }
         }
-        //[HttpPost]
-        //public ActionResult CreateComplaint(onboardingrecord record)
-        //{
-        //    ArrayList details = new ArrayList();
-        //    processingresponse response = new processingresponse
-        //    {
-        //        system_ref = DateTime.Now.ToString("yyyyMMddHHmmssfff")
-        //    };
-
-        //    try
-        //    {
-        //        ComplaintModel existingrecord = dbhandler.GetComplaint()!.Find(model => model.address!.Equals(record.applicant_details![0].address))!;
-        //        if (existingrecord != null)
-        //        {
-
-        //            record = null;
-        //            response.error_code = "01";
-        //            response.error_desc = "Record already submitted, kindly contact system admin";
-        //        }
-        //        else
-        //        {
-        //            var user = HttpContext.Session.GetString("userid");
-
-        //            //1. create primary registration
-        //            if (record.applicant_details != null)
-        //            {
-        //                var applicant = record.applicant_details[0];
-
-        //                ComplaintModel complaintModel = new ComplaintModel
-        //                {
-        //                    category_id = applicant.category_id,
-        //                    subcategory_id = applicant.subcategory_id,
-        //                    complaint_type = applicant.complaint_type,
-        //                    nature_of_complaint = applicant.nature_of_complaint,
-        //                    complaint_description = applicant.complaint_description,
-        //                    county_id = applicant.county_id,
-        //                    sub_county_id = applicant.sub_county_id,
-        //                    ward_id = applicant.ward_id,
-        //                    address = applicant.address,
-        //                    isanonymous = applicant.isanonymous
-        //                };
-
-
-        //                Int64 complaint_id = dbhandler.AddComplaint(complaintModel);
-
-
-        //                if (complaint_id > 0)
-        //                {
-        //                    JArray jarray = JArray.FromObject(record.applicant_details);
-
-        //                    //2. Create customer files records
-
-        //                    // PatientRecordModel personal_rec = dbhandler.GetPatientRecord()!.Find(model => model.id!.Equals(patient_id))!;
-
-
-        //                    //var personal_rec = dbhandler.GetRecordsById("account_no", patient_id);
-
-        //                    string[] client_files = record.complainant_files!.Split('|');
-        //                    //remove last item
-        //                    //client_files = client_files.Take(client_files.Count() - 1).ToArray();
-
-        //                    for (int i = 0; i < client_files.Length; i++)
-        //                    {
-        //                        ComplaintFilesModel filesmodel = new ComplaintFilesModel
-        //                        {
-        //                            complaint_id = complaint_id,
-        //                            file_name = client_files[i],
-        //                        };
-
-        //                        if (dbhandler.AddComplaintFiles(filesmodel))
-        //                        {
-        //                            ModelState.Clear();
-        //                            response.error_code = "00";
-        //                            response.error_desc = "Registration was success, you can proceed";
-        //                        }
-        //                        else
-        //                        {
-        //                            dbhandler.DeleteRecord(complaint_id, Convert.ToInt16(HttpContext.Session.GetString("userid")), "patient_register_fail_delete");
-        //                            ModelState.Clear();
-        //                            response.error_code = "01";
-        //                            response.error_desc = "File Upload Failed , kindly contact system admin";
-        //                        }
-        //                    }
-        //                }
-
-        //            }
-        //            else
-        //            {
-        //                return Content("Could not update Complaint, kindly contact system admin");
-        //            }
-        //        }
-
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-
-        //        iloggermanager.LogError(ex.Message);
-        //        response.error_code = "01";
-        //        response.error_desc = "Could not create client, kindly contact system admin";
-        //    }
-
-        //    return Content(JsonConvert.SerializeObject(response, Formatting.Indented), "application/json");
-
-        //}
+       
 
         [HttpPost]
         public IActionResult Upload(List<IFormFile> postedFiles)
@@ -281,6 +337,8 @@ namespace ComplaintManagement.Controllers
             DataTable datatable = new DataTable();
             //System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+
+            var user_id = HttpContext.Session.GetString("userid");
 
             if (param == "unapproved")
                 datatable = dbhandler.GetUnapprovedRecords(module);
@@ -323,6 +381,9 @@ namespace ComplaintManagement.Controllers
                             break;
                         case "subcountybyid":
                             datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));
+                            break;
+                        case "complaint_record_byId":
+                            datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(user_id));
                             break;
                         case "wardbyid":
                             datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));

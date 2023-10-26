@@ -21,11 +21,11 @@ $(document).ready(function () {
                    
                     "columnDefs": [
                         {
-                            "targets": 4,
+                            "targets": 6,
                             "render": function (data, type, row, meta) {
                                
                                 if (row.state_id === 0) {
-                                    return '<a href="#" class="btn btn-danger btn-xs flagclosed">Open</a>';
+                                    return '<a href="#" class="btn btn-warning btn-xs flagclosed">Open</a>';
                                 } else {
                                     return '<a href="#" class="btn btn-success btn-xs flagunOpen"> Closed</a>';
                                 }
@@ -39,20 +39,22 @@ $(document).ready(function () {
                         { "data": "complaint", "autoWidth": true, "sDefaultContent": "n/a" },
                         { "data": "nature_of_complaint", "autoWidth": true, "sDefaultContent": "n/a" },
                         {
+                            "bSortable": false,
+                            "sDefaultContent": "<a href='#' class='btn btn-info btn-xs view'><i class='fas fa-eye'></i> View</a>"
+                        },
+                        {
+                            "bSortable": false,
+                            "sDefaultContent": "<a href='#' class='btn btn-info btn-xs edit'><i ></i> Take Action</a>"
+                        },
+                        {
                             "data": "state_id",
                             "autoWidth": true,
                             "bSearchable": false,
                             "bSortable": false,
                             "sDefaultContent": "n/a"
-                        },
-                        {
-                            "bSortable": false,
-                            "sDefaultContent": "<a href='#' class='btn btn-info btn-xs view'><i class='fa fa-edit'></i> View</a>"
-                        },
-                        {
-                            "bSortable": false,
-                            "sDefaultContent": "<a href='#' class='btn btn-danger btn-xs delete'><i class='fas fa-trash-alt'></i> Delete</a>"
                         }
+                        
+                        
                     ]
                 });
 
@@ -86,27 +88,27 @@ $(document).ready(function () {
                     console.log(json);
 
                     $('.modal-body #recordid').val($(nRow).attr("recid"));
-                    $('.modal-body #category_id').val(json["category_id"]);
-                    $('.modal-body #subcategory_id').val(json["subcategory_id"]);
-                    $('.modal-body #complaint_type').val(json["complaint_type"]);
+                    $('.modal-body #category_id').val(json["category"]);
+                    $('.modal-body #subcategory_id').val(json["subcategory"]);
+                    $('.modal-body #complaint_type').val(json["complaint"]);
                     $('.modal-body #nature_of_complaint').val(json["nature_of_complaint"]);
-                    $('.modal-body #state_id').val(json["state_id"]);
-                    $('.modal-body #county_id').val(json["county_id"]);
-                    $('.modal-body #sub_county_id').val(json["sub_county_id"]);
-                    $('.modal-body #ward_id').val(json["ward_id"]);
-                    $('.modal-body #isanonymous').val(json["isanonymous"]);
+                    $('.modal-body #county_id').val(json["county"]);
+                    $('.modal-body #sub_county_id').val(json["subcounty"]);
+                    $('.modal-body #ward_id').val(json["ward"]);
+                    $('.modal-body #isanonymous').val(json["complainant_name"]);
                     $('.modal-body #complaint_description').val(json["complaint_description"]);
                     $('.modal-body #address').val(json["address"]);
+                    $('.modal-body #state_id').val(json["state_id"]);
                     $('.modal-body #remarks').val(json["remarks"]);
+
 
                     //var rec = json["id"];
                     //GetDocuments(rec);
                     //GetProfilePic(rec);
 
-                   // $("#view-record").appendTo("body").modal("show");
-
-                    $("#capture-record").appendTo("body").modal("show");
+                    $("#view-record").appendTo("body").modal("show");
                 }
+
 
               
                 $('#complaintsdatatable').on("click", 'a.flagclosed', function (e) {
@@ -170,62 +172,43 @@ $(document).ready(function () {
                 });
                 });
 
-                //var isEditing = null;
+                var isEditing = null;
 
-                ////Edit
-                //$('#complaintsdatatable').on("click", 'a.edit', function (e) {
-                //    e.preventDefault();
+                //Edit
+                $('#complaintsdatatable').on("click", 'a.edit', function (e) {
+                    e.preventDefault();
 
-                //    nRow = $(this).parents('tr')[0];
+                    nRow = $(this).parents('tr')[0];
 
-                //    //console.log($(this).parents('tr').attr("recid"));
+                    //console.log($(this).parents('tr').attr("recid"));
 
-                //    //console.log(nRow);
+                    //console.log(nRow);
 
-                //    if (isEditing !== null && isEditing != nRow) {
-                //        //restoreRow(oTable, isEditing);
-                //        editRow(oTable, nRow);
-                //        isEditing = nRow;
-                //    } else {
-                //        editRow(oTable, nRow);
-                //        isEditing = nRow;
-                //    }
-                //});
-
-
-                //function editRow(oTable, nRow) {
-                //    var aData = oTable.fnGetData(nRow);
-                //    var jqTds = $('>td', nRow);
-
-                //    var json = JSON.parse(JSON.stringify(aData));
-
-                //    console.log(json);
+                    if (isEditing !== null && isEditing != nRow) {
+                        //restoreRow(oTable, isEditing);
+                        editRow(oTable, nRow);
+                        isEditing = nRow;
+                    } else {
+                        editRow(oTable, nRow);
+                        isEditing = nRow;
+                    }
+                });
 
 
-                //    $('.modal-body #recordid').val($(nRow).attr("recid"));
-                //    $('.modal-body #category_id').val(json["category"]).trigger("change");
-                //    //selected_sub_category = json["subcategory_id"];
-                //    $('.modal-body #subcategory_id').val(json["subcategory"]).trigger("change");
-                //    $('.modal-body #complaint_type').val(json["complaint"]).trigger("change");
-                //    $('.modal-body #nature_of_complaint').val(json["nature_of_complaint"]);
-                //    $('.modal-body #county_id').val(json["county"]).trigger("change");
-                //    $('.modal-body #sub_county_id').val(json["subcounty"]).trigger("change");
-                //    $('.modal-body #ward_id').val(json["ward"]).trigger("change");
-                //    $('.modal-body #isanonymous').val(json["isanonymous"]);
-                //    $('.modal-body #complaint_description').val(json["complaint_description"]);
-                //    $('.modal-body #address').val(json["address"]);
-                //    $('.modal-body #state_Id').val(json["state_Id"]);
+                function editRow(oTable, nRow) {
+                    var aData = oTable.fnGetData(nRow);
+                    var jqTds = $('>td', nRow);
 
-                    
+                    var json = JSON.parse(JSON.stringify(aData));
 
-                //    var category = document.getElementById('category_id').value;
-                //    console.log(category);
-                //    //selected_sub_county = json["sub_county_id"];
-                //    //selected_ward = json["ward_id"];
-                //    GetSubcategory(category);
+                    console.log(json);
 
-                //    $("#capture-record").appendTo("body").modal("show");
-                //}
+
+                    $('.modal-body #recordid').val($(nRow).attr("recid"));
+                    $('.modal-body #remarks').val(json["remarks"]);
+
+                    $("#capture-record").appendTo("body").modal("show");
+                }
 
                 //Delete an Existing Row
                 $('#complaintsdatatable').on("click", 'a.delete', function (e) {
@@ -524,6 +507,62 @@ function GetWard(sub_county_id) {
     });
 }
 
+$('#save_action').click(function () {
+    var a = $(this).closest(".panel");
+
+    var id = document.getElementById('recordid').value;
+    var description = document.getElementById('description').value;
+    console.log(description);
+
+    var parameters = {
+        id: id,
+        description: description
+    };
+    console.log(parameters);
+
+    $.ajax({
+        url: "/ManageComplaint/MakeRemarks",
+        type: "POST",
+        data: parameters,
+        beforeSend: function () {
+            if (!$(a).hasClass("panel-loading")) {
+                var t = $(a).find(".panel-body"),
+                    i = '<div class="panel-loader"><span class="spinner-small"></span></div>';
+
+                $(a).addClass("panel-loading"), $(t).prepend(i);
+            }
+        },
+        success: function (data) {
+            //$.unblockUI();
+            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+            if (data == "Success") {
+                GetComplaintRegistration();
+                $("#capture-record").modal("hide").data("bs.modal", null);
+            } else {
+                Swal.fire({
+                    title: "Failed",
+                    text: data,
+                    icon: "error",
+                    confirmButtonText: "Ok"
+                });
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            //$.unblockUI();
+            $(a).removeClass("panel-loading"), $(a).find(".panel-loader").remove();
+
+            Swal.fire({
+                title: "Failed",
+                text: "Operation could not be completed " + errorThrown,
+                icon: "error",
+                confirmButtonText: "Ok"
+            });
+        }
+    });
+});
+
+
 $('#save').click(function () {
     var a = $(this).closest(".panel");
 
@@ -600,19 +639,10 @@ $('#save').click(function () {
     });
 });
 
+
+
 $("#capture-record").on("hidden.bs.modal", function (e) {
     $('#recordid').val("");
-    $('#category_id').val("").trigger('change');
-    $('#subcategory_id').val("").trigger('change');
-    $('#complaint_type').val("").trigger('change');
-    $('#nature_of_complaint').val("");
-    $('#complaint_description').val("");
-    $('#county_id').val("");
-    $('#sub_county_id').val("");
-    $('#ward_id').val("");
-    $('#address').val("");
-    $('#isanonymous').val("");
-    $('#state_id').val("").trigger('change');
     $('#remarks').val("").trigger('change');
 });
 

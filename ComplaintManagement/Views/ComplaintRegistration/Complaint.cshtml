@@ -9,8 +9,6 @@
     <link href="~/assets/static/plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     <link href="~/assets/static/plugins/uploader/css/jquery.dm-uploader.min.css" rel="stylesheet" />
     <link href="~/assets/static/plugins/uploader/css/style.css" rel="stylesheet" />
-
-
 }
 <!-- begin page-header -->
 <h1 class="page-header"><i class="fa-regular fa-book"></i> COMPlAINT MANAGEMENT <small> Register complaint </small></h1>
@@ -130,51 +128,38 @@
                                     <h5><b>2. Complaint Uploads</b></h5>
                                     <br />
                                     <fieldset>
+                                        <legend class="pull-left width-full">Maintain Uploads</legend>
                                         <div class="row">
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <label for="applicantid"><b>Complaint Related Doc</b></label>
-                                                <div class="input-group">
-                                                    <div id="drag-and-drop-zone-ids" class="dm-uploader">
-                                                        <div class="btn btn-primary btn-sm">
-                                                            <span>Open the file browser</span>
-                                                            <input type="file" title="Click to add file" />
-                                                        </div>
+                                            <div class="col-md-12">
+                                                <div id="drag-and-drop-zone" class="dm-uploader p-5">
+                                                    <h5 class="mb-5 mt-5 text-muted">Drag &amp; drop files here</h5>
+                                                    <div class="btn btn-primary btn-block mb-5">
+                                                        <span>Open the file browser</span>
+                                                        <input type="file" title="Click to add file" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <label>&nbsp;</label>
-                                                    @*<label id="label_national_id" class="form-control"></label>*@
-                                                    <a href="#" name="label_national_id" id="label_national_id" class="form-control"></a>
-                                                    <input type="text" id="label_text_national_id" name="label_text_national_id" class="form-control" required style="display: none" />
-                                                    <b><a href="#" name="clear_national_id" id="clear_national_id">Clear</a></b>
-                                                    <span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="label_text_national_id"></span>
-                                            </div>
                                         </div>
-                                        
-
-
-                                        <div class="row" style="display: none">
-                                            <div class="col-12">
-                                                <div id="uploadedFiles">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="uploadedFiles" style="display: none">
+                                                </div>
+                                                <div id="uploadedFilesList" style="display: none">
+                                                    <ul id="filelist" class="chart-legend"></ul>
                                                 </div>
                                                 <div class="card h-100">
                                                     <div class="card-header">
-                                                        Debug Messages
+                                                        Upload Messages
                                                     </div>
-
                                                     <ul class="list-group list-group-flush" id="debug">
                                                         <li class="list-group-item text-muted empty">Loading plugin....</li>
                                                     </ul>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         <div class="row">
                                             <br />
                                         </div>
-
                                     </fieldset>
 
                                 </div>
@@ -297,9 +282,32 @@
     <script src="~/assets/static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="~/assets/static/js/debugger.js"></script>
     <script src="~/assets/static/plugins/uploader/js/jquery.dm-uploader.min.js"></script>
-    <script src="~/assets/static/js/onboard/ind-onboard-uploader.js"></script>
+   @*  <script src="~/assets/static/js/onboard/ind-onboard-uploader.js"></script> *@
+    <script src="~/assets/static/js/onboard/client-onboard-uploader.js"></script>
 
-    
 
+    <!-- File item template -->
+    <script type="text/html" id="files-template">
+            <li class="media">
+              <div class="media-body mb-1">
+                <p class="mb-2">
+                  <strong>%%filename%%</strong> - Status: <span class="text-muted">Waiting</span>
+                </p>
+                <div class="progress mb-2">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+        role="progressbar"
+        style="width: 0%"
+        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  </div>
+                </div>
+                <hr class="mt-1 mb-1" />
+              </div>
+            </li>
+    </script>
+
+    <!-- Debug item template -->
+    <script type="text/html" id="debug-template">
+        <li class="list-group-item text-%%color%%"><strong>%%date%%</strong>: %%message%%</li>
+    </script>
 
 }}

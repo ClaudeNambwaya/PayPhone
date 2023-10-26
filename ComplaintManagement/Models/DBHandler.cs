@@ -434,6 +434,36 @@ namespace ComplaintManagement.Models
             }
             return recordlist;
         }
+        public List<ComplaintModel> GetComplaintRecord()
+        {
+            List<ComplaintModel> recordlist = new List<ComplaintModel>();
+
+            try
+            {
+                DataTable dt = new DataTable();
+                dt = GetRecords("complaint_list");
+
+                foreach (DataRow dr in dt.Rows)
+                {
+
+                    recordlist.Add(
+                    new ComplaintModel()
+                    {
+                        id = Convert.ToInt64(dr["id"])
+
+                    });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
+
+            }
+            return recordlist;
+        }
 
         public Int64 AddComplaint(ComplaintModel model)
         {
@@ -458,6 +488,7 @@ namespace ComplaintManagement.Models
                     cmd.Parameters.AddWithValue("@address", model.address);
                     cmd.Parameters.AddWithValue("@isanonymous", model.isanonymous);
                     cmd.Parameters.AddWithValue("@remarks", model.remarks);
+                    cmd.Parameters.AddWithValue("@user_id", model.user_id);
                
                     
 
@@ -570,7 +601,7 @@ namespace ComplaintManagement.Models
                 return false;
             }
         }
-        public bool UpdateRemarks(ComplaintModel model)
+        public bool UpdateRemarks(Int64 id, string description)
         {
             try
             {
@@ -580,8 +611,8 @@ namespace ComplaintManagement.Models
                     using MySqlCommand cmd = new MySqlCommand("update_remarks", connect);
                     connect.Open();
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_remarks", model.remarks);
+                    cmd.Parameters.AddWithValue("@in_id", id);
+                    cmd.Parameters.AddWithValue("@in_remarks", description);
 
                     i = (int)cmd.ExecuteNonQuery();
                 }
@@ -666,6 +697,42 @@ namespace ComplaintManagement.Models
             return recordlist;
         }
 
+        public List<ComplaintFilesModel> GetComplaintFiles(string module, string param = "normal")
+        {
+            List<ComplaintFilesModel> recordlist = new List<ComplaintFilesModel>();
+
+            try
+            {
+                DataTable datatable = new DataTable();
+
+                switch (module)
+                {
+
+                    case "complaint_files":
+                        if (!param.Equals("normal"))
+                            datatable = GetRecordsById(module, Convert.ToInt64(param));
+                        break;
+                        default:
+                        break;
+                }
+
+                foreach (DataRow dr in datatable.Rows)
+                {
+                    recordlist.Add(
+                    new ComplaintFilesModel
+                    {
+                        file_number = Convert.ToString(dr["file_number"])
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                //FileLogHelper.log_message_fields("ERROR", "GetPortalRoles | Exception ->" + ex.Message);
+            }
+
+            return recordlist;
+        }
 
         public List<ComplaintTypeModel> GetComplaintType()
         {
@@ -711,6 +778,38 @@ namespace ComplaintManagement.Models
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
                     cmd.Parameters.AddWithValue("@complaint_name", model.complaint_name);
+                 
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+        
+        public bool Addcomplaint_Files(ComplaintFilesModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_complaint_files", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@file_number", model.file_number);
+                    cmd.Parameters.AddWithValue("@file_name", model.file_name);
+                    cmd.Parameters.AddWithValue("@complaint_id", model.complaint_id);
                  
                     cmd.ExecuteNonQuery();
 

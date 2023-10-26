@@ -231,7 +231,11 @@ namespace ComplaintManagement.Controllers
                     dt = dbhandler.ValidateUserLogin("CLIENT", entity.email);
 
                     if (dt.Rows.Count > 0)
+
                     {
+                        var password = Cryptographer.Encrypt(entity.password);
+                        var pass = dt.Rows[0]["password"].ToString();
+
                         if (Cryptographer.Encrypt(entity.password).Replace("=", "") == dt.Rows[0]["password"].ToString())
                         {
                             if (Convert.ToBoolean(dt.Rows[0]["locked"]))

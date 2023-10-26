@@ -49,10 +49,9 @@ var getMonthName = function (a) {
         var obj =
         {
             u: json_item["month_period"],
-            v: json_item["hospital"],
-            w: json_item["departments"],
-            x: json_item["doctors"],
-            y: json_item["patient"]
+            v: json_item["complaint"],
+            w: json_item["open_complaint"],
+            x: json_item["closed_complaint"]
         };
 
         line_chart_data.push(obj);
@@ -62,8 +61,8 @@ var getMonthName = function (a) {
         element: "statistics-line-chart",
         data: line_chart_data,
         xkey: "u",
-        ykeys: ["v", "w", "x", "y"],
-        labels: ["hospital", "departments", "doctors", "patient"],
+        ykeys: ["v", "w", "x"],
+        labels: ["complaint", "open_complaint", "closed_complaint"],
         lineColors: [a, b, c, d,e],
         pointFillColors: [a, b, c, d,e],
         lineWidth: "2px",
@@ -141,21 +140,28 @@ var getMonthName = function (a) {
 }, handleDashboadData = function () {
     $.get('GetDashboardData', function (data) {
 
-        var jsonapplications = JSON.parse(data.widget_data);
+        if (data.widget_data) {
 
-        console.log(jsonapplications);
+            var jsonapplications = JSON.parse(data.widget_data);
 
-        document.getElementById('statistic_one').innerHTML = jsonapplications[0]["statistic_one"];
-        document.getElementById('statistic_two').innerHTML = jsonapplications[0]["statistic_two"];
-        document.getElementById('statistic_three').innerHTML = jsonapplications[0]["statistic_three"];
-        document.getElementById('statistic_four').innerHTML = jsonapplications[0]["statistic_four"];
+            console.log(jsonapplications);
 
-        handleStatisticsDonutChart(data);
+            document.getElementById('statistic_one').innerHTML = jsonapplications[0]["statistic_one"];
+            document.getElementById('statistic_two').innerHTML = jsonapplications[0]["statistic_two"];
+            document.getElementById('statistic_three').innerHTML = jsonapplications[0]["statistic_three"];
 
-        handleStatisticsLineChart(data);
+            handleStatisticsDonutChart(data);
 
-        handleAdminMessage(data);
-    });
+            handleStatisticsLineChart(data);
+
+            handleAdminMessage(data);
+        }
+    else {
+    console.error('Widget data is undefined or missing.');
+}
+}).fail(function (jqXHR, textStatus, errorThrown) {
+    console.error('Error: ' + errorThrown);
+});
  },
     DashboardV2 = function () {
         "use strict";

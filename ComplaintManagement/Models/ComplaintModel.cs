@@ -19,6 +19,7 @@ namespace ComplaintManagement.Models
         public string? address { get; set; }
         public bool isanonymous { get; set; }
         public string? remarks { get; set; }
+        public string? complainant { get; set; }
 
     }
 }
