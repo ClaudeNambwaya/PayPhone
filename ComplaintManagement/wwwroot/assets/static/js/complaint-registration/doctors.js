@@ -140,6 +140,7 @@
             }
         };
     }();
+    InitiateEditableDataTable.init();
 
     GetDoctors();
     GetHospital();
@@ -147,7 +148,7 @@
 
     
 
-    InitiateEditableDataTable.init();
+    
 
     var FormPlugins = function () {
         "use strict";

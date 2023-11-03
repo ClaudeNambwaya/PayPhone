@@ -144,11 +144,11 @@ $(document).ready(function () {
 
                     
 
-                    var category = document.getElementById('category_id').value;
-                    console.log(category);
-                    //selected_sub_county = json["sub_county_id"];
-                    //selected_ward = json["ward_id"];
-                    GetSubcategory(category);
+                    //var category = document.getElementById('category_id').value;
+                    //console.log(category);
+                    ////selected_sub_county = json["sub_county_id"];
+                    ////selected_ward = json["ward_id"];
+                    //GetSubcategory(category);
 
                     $("#capture-record").appendTo("body").modal("show");
                 }
@@ -324,34 +324,34 @@ function GetCategory() {
 
 
 /*$(document).ready(function () {*/
-    function GetSubcategory(category_id) {
-        $.get('GetRecords', { module: 'subcategorybyid', param: category_id }, function (data) {
-            console.log(category_id);
+function GetSubcategory(category_id) {
+    $.get('GetRecords', { module: 'subcategorybyid', param: category_id }, function (data) {
+        console.log(category_id);
 
-            // Clear the select options
-            $("#subcategory_id").empty();
+        // Clear the select options
+        $("#subcategory_id").empty();
 
-            // Add a default option
-            $("#subcategory_id").append(new Option("Please Select Sub-Category", "-1"));
-            console.log('here');
-            // Add subcategory options
-            $.each(data, function (index, item) {
-                $("#subcategory_id").append(new Option(item.sub_name, item.id));
-            });
-
-            // Bind change event
-            $("#subcategory_id").on("change", function () {
-                console.log("subcategory_id:" + $(this).val());
-
-                // Consider whether you want to make a recursive call here
-                // GetSubcategory($(this).val());
-            });
-
-            //if (selected_sub_category != -1)
-            //    $("#subcategory_id").val(selected_sub_category).trigger("change");
-
+        // Add a default option
+        $("#subcategory_id").append(new Option("Please Select Sub-Category", "-1"));
+        console.log('here');
+        // Add subcategory options
+        $.each(data, function (index, item) {
+            $("#subcategory_id").append(new Option(item.sub_name, item.id));
         });
-    }
+
+        // Bind change event
+        $("#subcategory_id").on("change", function () {
+            console.log("subcategory_id:" + $(this).val());
+
+            // Consider whether you want to make a recursive call here
+            // GetSubcategory($(this).val());
+        });
+
+        //if (selected_sub_category != -1)
+        //    $("#subcategory_id").val(selected_sub_category).trigger("change");
+
+    });
+}
 
     // Call the function initially with a default category_id if needed
     // GetSubcategory(initialCategoryID);
@@ -473,7 +473,7 @@ function GetSubCounty(county_id) {
         $("#sub_county_id").empty();
 
         // Add a default option
-        $("#sub_county_id").append(new Option("Please Select Sub-County", "-1"));
+        $("#sub_county_id").append(new Option("Please Select County", "-1"));
 
         // Add subcategory options
         $.each(data, function (index, item) {

@@ -102,8 +102,10 @@ $(document).ready(function () {
                     $('.modal-body #remarks').val(json["remarks"]);
 
 
-                    //var rec = json["id"];
-                    //GetDocuments(rec);
+                    var rec = json["id"];
+                    console.log(rec);
+
+                    GetComplaintDocuments(rec);
                     //GetProfilePic(rec);
 
                     $("#view-record").appendTo("body").modal("show");
@@ -281,6 +283,108 @@ $(document).ready(function () {
 
     InitiateEditableDataTable.init();
 
+    var InitiateComplaintsDataTable = function () {
+        return {
+            init: function () {
+                //Datatable Initiating
+                var oTable = $('#complaintdocumentssdatatable').dataTable({
+                    "responsive": true,
+                    "createdRow": function (row, data, dataIndex) {
+                        $(row).attr("recid", data.id);
+                    },
+
+                    "aoColumns": [
+                        { "data": "file_name", "autoWidth": true, "sDefaultContent": "n/a" },
+                        { "data": "file_number", "autoWidth": true, "sDefaultContent": "n/a" },
+
+                        {
+                            "bSortable": false,
+                            "sDefaultContent": "<a href='#' class='btn btn-primary btn-xs download'> Download </a>"
+                        }
+
+
+                    ]
+                });
+
+                var isDownloading = null;
+
+                //
+                //downloads
+                $('#complaintdocumentssdatatable').on("click", 'a.download', function (e) {
+                    e.preventDefault();
+
+                    nRow = $(this).parents('tr')[0];
+
+                    //console.log($(this).parents('tr').attr("recid"));
+
+                    //console.log(nRow);
+
+                    if (isDownloading !== null && isDownloading != nRow) {
+                        //restoreRow(oTable, isEditing);
+                        downloadFile(oTable, nRow);
+                        isDownloading = nRow;
+                    } else {
+                        downloadFile(oTable, nRow);
+                        isDownloading = nRow;
+                    }
+                });
+
+
+                function downloadFile(oTable, nRow) {
+                    var aData = oTable.fnGetData(nRow);
+                    var jqTds = $('>td', nRow);
+
+                    var json = JSON.parse(JSON.stringify(aData));
+
+                    
+
+                    var file = json["file_number"];
+                    console.log(file);
+                    window.open("/Uploads/" + file, '_blank'); 
+                    
+                }
+
+
+
+
+                //$('#complaintdocumentssdatatable').on("click", 'a.download', function (e) {
+                //    e.preventDefault();
+
+                //    //nRow = $(this).parents('tr')[0];
+                //    var nRow = $(this).parents('tr')[0];
+                //    var rec = $(this).parents('tr').attr("recid");
+
+                //    var parameters = { id: rec };
+
+                //    console.log(parameters);
+
+                //    $.ajax({
+                //        url: "/ManageComplaint/DownloadPDF",
+                //        type: "GET",
+                //        data: parameters,
+
+                //        success: function (data) {
+
+                //            var result = data.file;
+                //            console.log(result);
+                //            //window.location = "/uploads/1/" + data.file ;
+                //            window.open("/assets/client_documents/" + data.file, '_blank');
+                //        }
+                //    });
+
+                //});
+
+
+            }
+        };
+    }();
+
+    InitiateComplaintsDataTable.init();
+
+
+
+
+
     var FormPlugins = function () {
         "use strict";
         return {
@@ -297,8 +401,6 @@ $(document).ready(function () {
     GetCategory();
     GetCounty();
     GetComplaint_Type();
-
-
     
 });
 
@@ -313,7 +415,29 @@ function GetComplaintRegistration() {
     });
 }
 
+function GetComplaintDocuments(complaint_id) {
+    $.get('GetRecords', { module: 'complaint_files', param: complaint_id }, function (data) {
+        table = $('#complaintdocumentssdatatable').dataTable();
+        getcomplaintData(table, data);
+    });
+}
+
+
 function getData(table, jsonstring) {
+    oSettings = table.fnSettings();
+    table.fnClearTable(this);
+
+    var json = $.parseJSON(JSON.stringify(jsonstring));
+    //var json = JSON.parse(jsonstring);
+    for (var i = 0; i < json.length; i++) {
+        var item = json[i];
+        table.oApi._fnAddData(oSettings, item);
+    }
+    oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+    table.fnDraw();
+}
+
+function getcomplaintData(table, jsonstring) {
     oSettings = table.fnSettings();
     table.fnClearTable(this);
 

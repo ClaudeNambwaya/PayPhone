@@ -51,7 +51,8 @@ var getMonthName = function (a) {
             u: json_item["month_period"],
             v: json_item["complaint"],
             w: json_item["open_complaint"],
-            x: json_item["closed_complaint"]
+            x: json_item["closed_complaint"],
+            y: json_item["categories"]
         };
 
         line_chart_data.push(obj);
@@ -61,12 +62,12 @@ var getMonthName = function (a) {
         element: "statistics-line-chart",
         data: line_chart_data,
         xkey: "u",
-        ykeys: ["v", "w", "x"],
-        labels: ["complaint", "open_complaint", "closed_complaint"],
-        lineColors: [a, b, c, d,e],
-        pointFillColors: [a, b, c, d,e],
+        ykeys: ["v", "w", "x", "y"],
+        labels: ["complaint", "open_complaint", "closed_complaint", "categories"],
+        lineColors: [a, b, c, d, e],
+        pointFillColors: [a, b, c, d, e],
         lineWidth: "2px",
-        pointStrokeColors: [f, f, f, f,f],
+        pointStrokeColors: [f, f, f, f, f],
         resize: !0,
         gridTextFamily: "Open Sans",
         gridTextColor: a,
@@ -75,72 +76,70 @@ var getMonthName = function (a) {
         gridLineColor: "rgba(0,0,0,0.5)",
         hideHover: "auto"
     });
-    },
+},
     handleStatisticsDonutChart = function (data) {
 
-    var a = "#B6C2C9", //Default
-        b = "#FF5B57", //Danger
-        c = "#F59C1A", //Warning
-        d = "#00ACAC", //Success
-        e = "#348FE2"; //Primary
+        var a = "#B6C2C9", //Default
+            b = "#FF5B57", //Danger
+            c = "#F59C1A", //Warning
+            d = "#00ACAC", //Success
+            e = "#348FE2"; //Primary
 
-    var pie_chart_data = [];
+        var pie_chart_data = [];
 
-    var json_items = JSON.parse(data.doughnut_data);
+        var json_items = JSON.parse(data.doughnut_data);
 
-    var total_transfers = 0;
+        var total_transfers = 0;
 
-    for (var i = 0; i < json_items.length; i++) {
+        for (var i = 0; i < json_items.length; i++) {
 
-        var json_item = json_items[i];
+            var json_item = json_items[i];
 
-        total_transfers = total_transfers + Number(json_item["total"]);
+            total_transfers = total_transfers + Number(json_item["total"]);
 
-        var li = '<li>' +
-            '	<i class="fa fa-circle-o fa-fw text-' + json_item["color"] + ' m-r-5"></i> ' + json_item["percentile"] + ' % <span>' + json_item["category"] + ' Count</span>' +
-            '</li>';
+            var li = '<li>' +
+                '	<i class="fa fa-circle-o fa-fw text-' + json_item["color"] + ' m-r-5"></i> ' + json_item["percentile"] + ' % <span>' + json_item["category"] + ' Count</span>' +
+                '</li>';
 
-        $("#percentiles ul").append(li);
+            $("#percentiles ul").append(li);
 
-        var obj =
-        {
-            label: json_item["category"],
-            value: json_item["total"]
-        };
+            var obj =
+            {
+                label: json_item["category"],
+                value: json_item["total"]
+            };
 
-        pie_chart_data.push(obj);
-    }
+            pie_chart_data.push(obj);
+        }
 
-    document.getElementById('total_transfers').innerHTML = total_transfers.toLocaleString();
+        document.getElementById('total_transfers').innerHTML = total_transfers.toLocaleString();
 
-    Morris.Donut({
-        element: "statistics-donut-chart",
-        data: pie_chart_data,
-        colors: [a, b, c, d,e],
-        labelFamily: "Open Sans",
-        labelColor: "rgba(255,255,255,0.4)",
-        labelTextSize: "12px",
-        backgroundColor: "#242a30"
-    });
-}, handleAdminMessage = function (data) {
-    var json_item = data.message_data;
+        Morris.Donut({
+            element: "statistics-donut-chart",
+            data: pie_chart_data,
+            colors: [a, b, c, d, e],
+            labelFamily: "Open Sans",
+            labelColor: "rgba(255,255,255,0.4)",
+            labelTextSize: "12px",
+            backgroundColor: "#242a30"
+        });
+    }, handleAdminMessage = function (data) {
+        var json_item = data.message_data;
 
-    if (json_item["message"] != '') {
-        setTimeout(function () {
-            $.gritter.add({
-                title: 'Welcome back, ' + json_item["user"] + '!',
-                text: json_item["message"],
-                image: '../assets/static/img/profile-pics/' + json_item["avatar"],
-                sticky: true,
-                time: '',
-                class_name: 'my-sticky-class'
-            });
-        }, 1000);
-    }
-}, handleDashboadData = function () {
-    $.get('GetDashboardData', function (data) {
-
-        if (data.widget_data) {
+        if (json_item["message"] != '') {
+            setTimeout(function () {
+                $.gritter.add({
+                    title: 'Welcome back, ' + json_item["user"] + '!',
+                    text: json_item["message"],
+                    image: '../assets/static/img/profile-pics/' + json_item["avatar"],
+                    sticky: true,
+                    time: '',
+                    class_name: 'my-sticky-class'
+                });
+            }, 1000);
+        }
+    }, handleDashboadData = function () {
+        $.get('GetDashboardData', function (data) {
 
             var jsonapplications = JSON.parse(data.widget_data);
 
@@ -149,20 +148,15 @@ var getMonthName = function (a) {
             document.getElementById('statistic_one').innerHTML = jsonapplications[0]["statistic_one"];
             document.getElementById('statistic_two').innerHTML = jsonapplications[0]["statistic_two"];
             document.getElementById('statistic_three').innerHTML = jsonapplications[0]["statistic_three"];
+            document.getElementById('statistic_four').innerHTML = jsonapplications[0]["statistic_four"];
 
             handleStatisticsDonutChart(data);
 
             handleStatisticsLineChart(data);
 
             handleAdminMessage(data);
-        }
-    else {
-    console.error('Widget data is undefined or missing.');
-}
-}).fail(function (jqXHR, textStatus, errorThrown) {
-    console.error('Error: ' + errorThrown);
-});
- },
+        });
+    },
     DashboardV2 = function () {
         "use strict";
         return {
@@ -170,5 +164,5 @@ var getMonthName = function (a) {
                 handleDashboadData();
             }
         };
- 
+
     }();

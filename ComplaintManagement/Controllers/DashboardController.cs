@@ -49,7 +49,7 @@ namespace ComplaintManagement.Controllers
             try
             {
 
-                DataTable datatable = dbhandler.GetAdhocData("exec get_admin_dashboard_widget_data");
+                DataTable datatable = dbhandler.GetAdhocData("call get_admin_dashboard_widget_data");
 
                 if (datatable.Rows.Count > 0)
                 {
@@ -67,7 +67,7 @@ namespace ComplaintManagement.Controllers
 
                 rows = new List<Dictionary<string, object>>();
 
-                DataTable datatableI = dbhandler.GetAdhocData("exec get_admin_dashboard_doughnut_data");
+                DataTable datatableI = dbhandler.GetAdhocData("call get_admin_dashboard_doughnut_data");
 
                 if (datatableI.Rows.Count > 0)
                 {
@@ -85,7 +85,7 @@ namespace ComplaintManagement.Controllers
 
                 rows = new List<Dictionary<string, object>>();
 
-                DataTable datatableII = dbhandler.GetAdhocData("exec get_admin_dashboard_line_chart_data");
+                DataTable datatableII = dbhandler.GetAdhocData("call get_admin_dashboard_line_chart_data");
 
                 if (datatableII.Rows.Count > 0)
                 {

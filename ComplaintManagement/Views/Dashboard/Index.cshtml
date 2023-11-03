@@ -11,7 +11,7 @@
     <div class="col-md-3 col-sm-6">
         <div class="widget widget-stats bg-green">
             <div class="stats-icon stats-icon-lg"><i class="fas fa-exchange-alt"></i></div>
-            <div class="stats-title" id="statistic_one_title">Total Complaints</div>
+            <div class="stats-title" id="statistic_one_title">Complaints</div>
             <div class="stats-number" id="statistic_one"></div>
             <div class="stats-progress progress">
                 <div class="progress-bar" style="width: 100%;"></div>
@@ -49,17 +49,17 @@
     </div>
     <!-- end col-3 -->
     <!-- begin col-4 -->
-    @* <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6">
         <div class="widget widget-stats bg-red">
             <div class="stats-icon stats-icon-lg"><i class="fa fa-globe fa-fw"></i></div>
-            <div class="stats-title" id="statistic_four_title">State</div>
+            <div class="stats-title" id="statistic_four_title">Category</div>
             <div class="stats-number" id="statistic_four"></div>
             <div class="stats-progress progress">
                 <div class="progress-bar" style="width: 100%;"></div>
             </div>
-            <div class="stats-desc">Total number of States</div>
+            <div class="stats-desc">Total number of Category</div>
         </div>
-    </div> *@
+    </div>
     <!-- end col-4 -->
 </div>
 <!-- end row -->
@@ -70,14 +70,14 @@
             <div class="widget-chart-content">
                 <h4 class="chart-title">
                     Analytics
-                    <small>Complaints DATA (Last 6 months)</small>
+                    <small>COMPLAINTS DATA (Last 6 months)</small>
                 </h4>
                 <div id="statistics-line-chart" class="morris-inverse" style="height: 260px;"></div>
             </div>
             <div class="widget-chart-sidebar bg-black-darker" id="percentiles">
                 <div class="chart-number">
                     <div id="total_transfers"></div>
-                    <small>All Complaints DATA</small>
+                    <small>All COMPLAINTS DATA</small>
                 </div>
                 <div id="statistics-donut-chart" style="height: 140px"></div>
                 <br />
@@ -87,8 +87,6 @@
     </div>
 </div>
 <!-- end row -->
-
-
 @section PageScripts{
     <script src="~/assets/static/plugins/gritter/js/jquery.gritter.js"></script>
     <script src="~/assets/static/plugins/morris/raphael.min.js"></script>

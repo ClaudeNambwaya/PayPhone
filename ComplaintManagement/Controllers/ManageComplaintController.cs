@@ -2,6 +2,7 @@
 using ComplaintManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Data;
 using static ComplaintManagement.Controllers.ManageComplaintController;
@@ -48,84 +49,42 @@ namespace ComplaintManagement.Controllers
             }
         }
 
-        //[HttpPost]
-        //public ActionResult UpdateComplaint(complaintrecord record)
-        //{
-        //    if (HttpContext.Session.GetString("name") == null)
-        //        return RedirectToAction("AdminLogin", "AppAuth");
-        //    else
-        //    {
-        //        if (record.category_id == null)
-        //            return Content("Invalid name");
-        //        if (record.complaint_type == null)
-        //            return Content("Invalid name");
+        public ActionResult DownloadPDF(Int64? id)
+        {
 
-        //        try
-        //        {
-        //            ComplaintModel existingrecord = dbhandler.GetComplaint().Find(mymodel => mymodel.id == record.id)!;
-        //            if (existingrecord != null)
-        //            {
-        //                ComplaintModel mymodel = new ComplaintModel
-        //                {
-        //                    id = existingrecord.id,
-        //                    category_id = record.category_id,
-        //                    subcategory_id = record.subcategory_id,
-        //                    complaint_type = record.complaint_type,
-        //                    nature_of_complaint = record.nature_of_complaint,
-        //                    complaint_description = record.complaint_description,
-        //                    county_id = record.county_id,
-        //                    sub_county_id = record.sub_county_id,
-        //                    ward_id = record.ward_id,
-        //                    address = record.address,
-        //                    isanonymous = record.isanonymous,
-        //                    remarks = record.remarks
+            List<ComplaintFilesModel> recordstklist = new List<ComplaintFilesModel>();
 
-        //                };
+            DataTable dt = new DataTable();
 
-        //                if (dbhandler.UpdateRemarks(mymodel))
-        //                {
-        //                    // CaptureAuditTrail("Updated name", "name: " + mymodel.name);
+            var pdfId = Convert.ToInt32(id);
 
-        //                    ModelState.Clear();
-        //                    return Content("Success");
-        //                }
-        //                else
-        //                    return Content("Could not update Complaint, kindly contact system admin");
-        //            }
-        //            else
-        //            {
-        //                ComplaintModel mymodel = new ComplaintModel
-        //                {
+            dt = dbhandler.GetRecordsById("complaint_files", Convert.ToInt64(id));
 
-        //                    category_id = record.category_id,
-        //                    subcategory_id = record.subcategory_id,
-        //                    complaint_type = record.complaint_type,
-        //                    nature_of_complaint = record.nature_of_complaint,
-        //                    complaint_description = record.complaint_description,
-        //                    county_id = record.county_id,
-        //                    sub_county_id = record.sub_county_id,
-        //                    ward_id = record.ward_id,
-        //                    address = record.address,
-        //                    isanonymous = record.isanonymous,
-        //                    remarks = record.remarks
+            //dt = mydb.GetRecordsById("my_pdf", pdfId);
+            //dt = mydb.GetRecordsById("my_pdf", Convert.ToInt64(id));
+
+            foreach (DataRow dr in dt.Rows)
+            {
 
 
-        //                };
-                        
-        //                    Int64 complaint_id = dbhandler.AddComplaint(mymodel);
+                var filename = Convert.ToString(dr["file_number"]);
 
 
-        //                    return Content("Success");
-                      
-        //            }
-        //        }
-        //        catch
-        //        {
-        //            return Content("Could not create topic, kindly contact system admin");
-        //        }
-        //    }
-        //}
-        
+                JObject jobject = new JObject
+                    {
+                        { "file", filename }
+                    };
+
+                return Content(jobject.ToString(), "application/json");
+
+
+
+            }
+
+            return Content("success");
+
+        }
+
         [HttpPost]
         public ActionResult MakeRemarks(Int64 id, string description)
         {
@@ -250,6 +209,7 @@ namespace ComplaintManagement.Controllers
                         case "role_allocated_permissions":
                         case "user_unallocated_roles":
                         case "user_allocated_roles":
+                        case "complaint_files":
                             datatable = dbhandler.GetRecordsById(module, Convert.ToInt16(param));
                             break;
                         //case "subcategorybyid":
@@ -284,7 +244,7 @@ namespace ComplaintManagement.Controllers
                     rows.Add(row);
                 }
             }
-            return Content(JsonConvert.SerializeObject(rows, Formatting.Indented) /*serializer.Serialize(rows)*/, "application/json");
+            return Content(JsonConvert.SerializeObject(rows, Formatting.Indented), "application/json");
         }
 
         public ActionResult Delete(/*[FromBody] JObject jobject*/int id, string module)
