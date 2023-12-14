@@ -179,11 +179,13 @@ namespace ComplaintManagement.Controllers
                         return View(entity);
                     }
                 }
-
+                string usertype = "";
                 DataTable dt = new DataTable();
                 dt = dbhandler.ValidateUserLogin("ADMIN", entity.email);
                 if (dt.Rows.Count > 0)
                 {
+                    usertype = "ADMIN";
+
                     if (Cryptographer.Encrypt(entity.password).Replace("=", "") == dt.Rows[0]["password"].ToString())
                     {
                         if (Convert.ToBoolean(dt.Rows[0]["locked"]))
@@ -208,6 +210,7 @@ namespace ComplaintManagement.Controllers
                             HttpContext.Session.SetString("name", dt.Rows[0]["name"].ToString()!);
                             HttpContext.Session.SetString("profileid", dt.Rows[0]["role_id"].ToString()!);
                             HttpContext.Session.SetString("menulayout", dt.Rows[0]["menu_layout"].ToString()!);
+                            HttpContext.Session.SetString("userType", usertype);
 
                             //For Set Authentication in Cookie (Remeber ME Option)
                             SignInRemember(entity.email, entity.isRemember);
@@ -231,8 +234,9 @@ namespace ComplaintManagement.Controllers
                     dt = dbhandler.ValidateUserLogin("CLIENT", entity.email);
 
                     if (dt.Rows.Count > 0)
-
                     {
+
+                        usertype = "CLIENT";
                         var password = Cryptographer.Encrypt(entity.password);
                         var pass = dt.Rows[0]["password"].ToString();
 
@@ -260,6 +264,7 @@ namespace ComplaintManagement.Controllers
                                 HttpContext.Session.SetString("name", dt.Rows[0]["name"].ToString()!);
                                 HttpContext.Session.SetString("profileid", dt.Rows[0]["role_id"].ToString()!);
                                 HttpContext.Session.SetString("menulayout", dt.Rows[0]["menu_layout"].ToString()!);
+                                HttpContext.Session.SetString("userType", usertype);
 
 
                                 //For Set Authentication in Cookie (Remeber ME Option)
@@ -267,7 +272,7 @@ namespace ComplaintManagement.Controllers
 
                                 CaptureAuditTrail(entity.email, "Successful Login", "Successfully logged in with user: " + HttpContext.Session.GetString("email"));
 
-                                return RedirectToAction("Index", "Dashboard");
+                                return RedirectToAction("Client", "Dashboard");
                                 //return RedirectToLocal(entity.ReturnURL);
                             }
                         }

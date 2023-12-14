@@ -61,9 +61,22 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label class="form-control-label" for="password">Password</label>
-                            <input id="password" type="text" name="password" class="form-control" />
+                            <input id="password" type="password" name="password" class="form-control" req />
                         </div>
-                    </div><br />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-control-label" for="confirmPassword">Confirm Password</label>
+                            <input id="confirmPassword" type="password" name="confirmPassword" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-control-label" for="showPassword">Show Password</label>
+                            <input id="showPassword" type="checkbox" onclick="togglePasswordVisibility()" />
+                        </div>
+                    </div>
+                    <br />
                     <div class="modal-footer">
 
                         <a href="#" class="btn btn-success btn-sm" id="save"><i class="fa fa-save"></i>&nbsp;Register</a>
@@ -74,7 +87,7 @@
                     </div>
                     <hr />
                     <p class="text-center">
-                        Copyright &copy; @DateTime.Now.Year <a href="https://complaintmanagement.com" target="_blank">Complaint Management</a>.
+                        Copyright &copy; @DateTime.Now.Year <a href="https://www.smartcode.co.ke" target="_blank">Smartcode Technologies</a>.
                         All rights reserved.
                     </p>
 
@@ -101,6 +114,21 @@
     <script type="text/javascript">
 
 
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById('password');
+            var confirmPasswordInput = document.getElementById('confirmPassword');
+            var showPasswordCheckbox = document.getElementById('showPassword');
+
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = 'text';
+                confirmPasswordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+                confirmPasswordInput.type = 'password';
+            }
+        }
+
+
         $('#save').click(function () {
             var a = $(this).closest(".panel");
 
@@ -109,10 +137,19 @@
             var mobile = document.getElementById('mobile').value;
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value; // Added line
+
+            //check if passwords match
+            if (password !== confirmPassword) {
+                $.notify("Passwords do not match", {
+                    globalPosition: "top center",
+                    className: "error" // Stop execution if passwords do not match
+                });
+                return;
+            }
 
             var role_id = 2;
             var locked = 0;
-            var approved
 
 
             var parameters = {

@@ -1,4 +1,6 @@
-﻿var blue = "#348fe2",
+﻿
+
+var blue = "#348fe2",
     blueLight = "#5da5e8",
     blueDark = "#1993E4",
     aqua = "#49b6d6",
@@ -143,7 +145,7 @@ var getMonthName = function (a) {
 
         console.log(usertype);
         
-        $.get('GetDashboardData', { usertype: usertype }, function (data) {
+        $.get('GetClientDashboardData', { usertype: usertype }, function (data) {
 
             var jsonapplications = JSON.parse(data.widget_data);
 

@@ -18,25 +18,25 @@ $(document).ready(function () {
                         $(row).attr("recid", data.id);
                     },
 
-                    "columnDefs": [
-                        {
-                            "targets": 6,
-                            "render": function (data, type, row, meta) {
-                                return "<div class='input-group-btn input-group-btn-xs'>" +
-                                    "   <button type='button' class='btn btn-primary btn-xs'>Action</button> " +
-                                    "   <button type='button' class='btn btn-primary btn-xs dropdown-toggle' data-toggle='dropdown'> " +
-                                    "       <span class='caret'></span> " +
-                                    "   </button> " +
-                                    "   <ul class='dropdown-menu'> " +
-                                    "       <li><a href='#' class='dropdown-item view'><i class='fas fa-eye'></i> View</a></li> " +
-                                    "       <li class='divider'></li> " +
-                                    "       <li><a href='#' class='dropdown-item edit'><i class='fa fa-edit'></i> Edit</a></li> " +
-                                    "       <li><a href='#' class='dropdown-item delete'><i class='fa fa-trash'></i> Delete</a></li> " +
-                                    "   </ul> " +
-                                    "</div>";
-                            }
-                        }
-                    ],
+                    //"columnDefs": [
+                    //    {
+                    //        "targets": 6,
+                    //        "render": function (data, type, row, meta) {
+                    //            return "<div class='input-group-btn input-group-btn-xs'>" +
+                    //                "   <button type='button' class='btn btn-primary btn-xs'>Action</button> " +
+                    //                "   <button type='button' class='btn btn-primary btn-xs dropdown-toggle' data-toggle='dropdown'> " +
+                    //                "       <span class='caret'></span> " +
+                    //                "   </button> " +
+                    //                "   <ul class='dropdown-menu'> " +
+                    //                "       <li><a href='#' class='dropdown-item view'><i class='fas fa-eye'></i> View</a></li> " +
+                    //                "       <li class='divider'></li> " +
+                    //                "       <li><a href='#' class='dropdown-item edit'><i class='fa fa-edit'></i> Edit</a></li> " +
+                    //                "       <li><a href='#' class='dropdown-item delete'><i class='fa fa-trash'></i> Delete</a></li> " +
+                    //                "   </ul> " +
+                    //                "</div>";
+                    //        }
+                    //    }
+                    //],
 
                     "aoColumns": [
                         { "data": "category", "autoWidth": true, "sDefaultContent": "n/a" },
@@ -45,7 +45,10 @@ $(document).ready(function () {
                         { "data": "nature_of_complaint", "autoWidth": true, "sDefaultContent": "n/a" },
                         { "data": "state_id", "autoWidth": true, "sDefaultContent": "n/a" },
                         { "data": "isanonymous", "autoWidth": true, "sDefaultContent": "n/a" },
-                        { "bSortable": false, "sDefaultContent": "n/a" }
+                        {
+                            "bSortable": false,
+                            "sDefaultContent": "<a href='#' class='btn btn-info btn-xs view'><i class='fas fa-eye'></i> View</a>"
+                        }
                     ]
                 });
 
@@ -87,6 +90,7 @@ $(document).ready(function () {
                     $('.modal-body #sub_county_id').val(json["subcounty"]);
                     $('.modal-body #ward_id').val(json["ward"]);
                     $('.modal-body #isanonymous').val(json["isanonymous"]);
+                    $('.modal-body #state_id').val(json["state_id"]);
                     $('.modal-body #complaint_description').val(json["complaint_description"]);
                     $('.modal-body #address').val(json["address"]);
                     $('.modal-body #remarks').val(json["remarks"]);

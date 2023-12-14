@@ -1,4 +1,10 @@
-﻿@section PageStyles{
+﻿@* @{
+    Layout = "/Views/Shared/_ClientLayout.cshtml";
+
+
+}                                                                               
+ *@
+@section PageStyles{
     <link href="~/assets/static/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
     <link href="~/assets/static/css/pretty-checkbox.min.css" rel="stylesheet" />
     <link href="~/assets/static/plugins/datatables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
@@ -221,10 +227,10 @@
                                     <div class="col-md-4 col-sm-4 col-xs-12">
                                         <label class="form-control-label" for="isanonymous">Is Anonymous</label>
                                         <input id="isanonymous" type="text" name="isanonymous" class="form-control" readonly />
-                                    </div> 
+                                    </div>
                                     <div class="col-md-4 col-sm-4 col-xs-12">
-                                        <label class="form-control-label" for="remarks">Remarks</label>
-                                        <input id="remarks" type="text" name="remarks" class="form-control" readonly />
+                                        <label class="form-control-label" for="state_id">State</label>
+                                        <input id="state_id" type="text" name="state_id" class="form-control" readonly />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -235,6 +241,12 @@
                                     <div class="col-md-6">
                                         <label class="form-control-label" for="address">Physical Address</label>
                                         <textarea id="address" rows="3" name="address" class="form-control" placeholder="Enter Physical Address" readonly></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-control-label" for="remarks">Remarks</label>
+                                        <input id="remarks" type="text" name="remarks" class="form-control" readonly />
                                     </div>
                                 </div>
                                 <div class="row">

@@ -977,16 +977,46 @@ namespace ComplaintManagement.Models
             }
         }
 
-        public DataTable GetAdhocData(string sql)
+        public DataTable GetAdhocData(string sql, string userid = "")
         {
             DataTable dt = new DataTable();
 
             try
             {
-                using MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB));
-                using MySqlCommand cmd = new MySqlCommand(sql, connect);
-                using MySqlDataAdapter sd = new MySqlDataAdapter(cmd);
-                sd.Fill(dt);
+                if(userid != "")
+                {
+                    using MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB));
+                    using MySqlCommand cmd = new MySqlCommand()
+                    {
+                        Connection = connect,
+                        CommandType = CommandType.StoredProcedure,
+                        CommandText = "get_client_dashboard_widget_data"
+                    };
+
+                    // Add a parameter for user_id
+                    cmd.Parameters.AddWithValue("@user_id_param", userid);
+
+                    using MySqlDataAdapter sd = new MySqlDataAdapter(cmd);
+                    sd.Fill(dt);
+
+                    //using MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB));
+                    ////using MySqlCommand cmd = new MySqlCommand(sql, connect);
+                    //using MySqlCommand cmd = new MySqlCommand("get_client_dashboard_widget_data", connect);
+                    //// Add a parameter for user_id
+                    //cmd.Parameters.AddWithValue("@user_id_param", userid);
+                    //using MySqlDataAdapter sd = new MySqlDataAdapter(cmd);
+                    //sd.Fill(dt);
+                }
+                else
+                {
+                    using MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB));
+                    using MySqlCommand cmd = new MySqlCommand(sql, connect);
+                    // Add a parameter for user_id
+                    //cmd.Parameters.AddWithValue("@user_id_param", userId);
+                    using MySqlDataAdapter sd = new MySqlDataAdapter(cmd);
+                    sd.Fill(dt);
+                }
+               
             }
             catch (Exception ex)
             {
@@ -1264,7 +1294,7 @@ namespace ComplaintManagement.Models
 
             try
             {
-                DataTable dt = new DataTable();
+                  DataTable dt = new DataTable();
                 dt = GetRecords("roles");
 
                 foreach (DataRow dr in dt.Rows)
