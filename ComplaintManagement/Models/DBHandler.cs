@@ -14,7 +14,7 @@ namespace ComplaintManagement.Models
     public class DBHandler : IDisposable
     {
         public readonly IConfiguration config;
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        //private static Logger logger = LogManager.GetCurrentClassLogger();
         private MySqlConnection connection;
         private string connectionstring;
 
