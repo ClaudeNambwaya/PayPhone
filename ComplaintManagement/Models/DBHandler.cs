@@ -8,6 +8,8 @@ using static ComplaintManagement.Helpers.CryptoHelper;
 using MySql.Data.MySqlClient;
 using Microsoft.Extensions.Configuration;
 using NLog;
+using PayPhone.Models;
+using System.Transactions;
 
 namespace ComplaintManagement.Models
 {
@@ -17,6 +19,7 @@ namespace ComplaintManagement.Models
         //private static Logger logger = LogManager.GetCurrentClassLogger();
         private MySqlConnection connection;
         private string connectionstring;
+        private MySqlTransaction transaction;
 
         public DBHandler(string connstring)
         {
@@ -107,846 +110,6 @@ namespace ComplaintManagement.Models
 
             return dt;
         }
-
-        public List<CategoryModel> GetCategory()
-        {
-            List<CategoryModel> recordlist = new List<CategoryModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("category_record");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new CategoryModel()
-                    {
-                        id = Convert.ToInt64(dr["id"]),
-                        category_name = Convert.ToString(dr["category_name"]),
-                        category_description = Convert.ToString(dr["category_description"]),
-                        created_on = Convert.ToDateTime(dr["created_on"]),
-                        //updated_date = Convert.ToDateTime(dr["updated_date"])
-                    });
-                }
-                
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-
-        public bool AddCategory(CategoryModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_category", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@category_name", model.category_name);
-                    cmd.Parameters.AddWithValue("@category_description", model.category_description);
-             
-                   
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public bool UpdateCategory(CategoryModel model)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_category", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_category_name", model.category_name);
-                    cmd.Parameters.AddWithValue("@in_category_description", model.category_description);
-                  
-
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public List<SubcategoryModel> GetSubcategory()
-        {
-            List<SubcategoryModel> recordlist = new List<SubcategoryModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("subcategory_record");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new SubcategoryModel()
-                    {
-                        id = Convert.ToInt64(dr["id"]),
-                        sub_name = Convert.ToString(dr["sub_name"]),
-                        category_id = Convert.ToInt64(dr["category_id"])
-                        
-                        
-                    });
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-
-        public bool AddSubcategory(SubcategoryModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_subcategory", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@sub_name", model.sub_name);
-                    cmd.Parameters.AddWithValue("@category_id", model.category_id);
-                   
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public bool UpdateSubcategory(SubcategoryModel model)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_sub_category", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_sub_name", model.sub_name);
-                    cmd.Parameters.AddWithValue("@in_category_id", model.category_id);
-                  
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public List<StateModel> GetState()
-        {
-            List<StateModel> recordlist = new List<StateModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("state_record");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new StateModel()
-                    {
-                        id = Convert.ToInt64(dr["id"]),
-                        state_name = Convert.ToString(dr["state_name"]),
-                        description = Convert.ToString(dr["description"])
-                       
-                    });
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-
-        public bool AddState(StateModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_state", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@state_name", model.state_name);
-                    cmd.Parameters.AddWithValue("@description", model.description);
-                
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public bool UpdateState(StateModel model)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_state", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_state_name", model.state_name);
-                    cmd.Parameters.AddWithValue("@in_description", model.description);
-
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public List<ComplaintModel> GetComplaint()
-        {
-            List<ComplaintModel> recordlist = new List<ComplaintModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("complaint_record");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new ComplaintModel()
-                    {
-                        id = Convert.ToInt64(dr["id"]),
-                        user_id = Convert.ToString(dr["user_id"]),
-                        category_id = Convert.ToInt64(dr["category_id"]),
-                        subcategory_id = Convert.ToInt64(dr["subcategory_id"]),
-                        complaint_type = Convert.ToInt64(dr["complaint_type"]),
-                        state_id = Convert.ToBoolean(dr["state_id"]),
-                        nature_of_complaint = Convert.ToString(dr["nature_of_complaint"]),
-                        complaint_description = Convert.ToString(dr["complaint_description"]),
-                        county_id = Convert.ToInt64(dr["county_id"]),
-                        sub_county_id = Convert.ToInt64(dr["sub_county_id"]),
-                        ward_id = Convert.ToInt64(dr["ward_id"]),
-                        address = Convert.ToString(dr["address"]),
-                        isanonymous = Convert.ToBoolean(dr["isanonymous"]),
-                        remarks = Convert.ToString(dr["remarks"])
-
-                    });
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-        public List<ComplaintModel> GetComplaintRecord()
-        {
-            List<ComplaintModel> recordlist = new List<ComplaintModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("complaint_list");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new ComplaintModel()
-                    {
-                        id = Convert.ToInt64(dr["id"])
-
-                    });
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-
-        public Int64 AddComplaint(ComplaintModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_complaint", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-
-                    cmd.Parameters.AddWithValue("@category_id", model.category_id);
-                    cmd.Parameters.AddWithValue("@subcategory_id", model.subcategory_id);
-                    cmd.Parameters.AddWithValue("@complaint_type", model.complaint_type);
-                    cmd.Parameters.AddWithValue("@nature_of_complaint", model.nature_of_complaint);
-                    cmd.Parameters.AddWithValue("@complaint_description", model.complaint_description);
-                    cmd.Parameters.AddWithValue("@county_id", model.county_id);
-                    cmd.Parameters.AddWithValue("@sub_county_id", model.sub_county_id);
-                    cmd.Parameters.AddWithValue("@ward_id", model.ward_id);
-                    cmd.Parameters.AddWithValue("@address", model.address);
-                    cmd.Parameters.AddWithValue("@isanonymous", model.isanonymous);
-                    cmd.Parameters.AddWithValue("@remarks", model.remarks);
-                    cmd.Parameters.AddWithValue("@user_id", model.user_id);
-               
-                    
-
-
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                return i;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return 0;
-            }
-        }
-        public Int64 AddRemarks(ComplaintModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_remarks", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@remarks", model.remarks);
-               
-                    
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                return i;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return 0;
-            }
-        }
-
-        public bool AddComplaintFiles(ComplaintFilesModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_files", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@complaint_id", model.complaint_id);
-                    cmd.Parameters.AddWithValue("@file_name", model.file_name);
-
-                    cmd.ExecuteNonQuery();
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i > 0)
-
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddPost | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-
-        public bool UpdateComplaint(ComplaintModel model)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_complaint", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_category_id", model.category_id);
-                    cmd.Parameters.AddWithValue("@in_subcategory_id", model.subcategory_id);
-                    cmd.Parameters.AddWithValue("@in_complaint_type", model.complaint_type);
-                    cmd.Parameters.AddWithValue("@in_nature_of_complaint", model.nature_of_complaint);
-                    cmd.Parameters.AddWithValue("@in_complaint_description", model.complaint_description);
-                    cmd.Parameters.AddWithValue("@in_county_id", model.county_id);
-                    cmd.Parameters.AddWithValue("@in_sub_county_id", model.sub_county_id);
-                    cmd.Parameters.AddWithValue("@in_ward_id", model.ward_id);
-                    cmd.Parameters.AddWithValue("@in_isanonymous", model.isanonymous);
-                    cmd.Parameters.AddWithValue("@in_address", model.address);
-                    cmd.Parameters.AddWithValue("@in_remarks", model.remarks);
-
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-               
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateComplaint | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-        public bool UpdateRemarks(Int64 id, string description)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_remarks", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", id);
-                    cmd.Parameters.AddWithValue("@in_remarks", description);
-
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateComplaint | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-        public bool Update_Open_Complaint_Status(Int64 id, string module, string param1 = "", DataBaseObject database = DataBaseObject.HostDB)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(database)))
-                {
-                    using (MySqlCommand cmd = new MySqlCommand("update_complaint_status", connect))
-                    {
-                        connect.Open();
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@in_recordid", id);
-                        if (param1 != "")
-                            cmd.Parameters.AddWithValue("@param1", param1);
-                        cmd.Parameters.AddWithValue("@in_module", module);
-                        i = cmd.ExecuteNonQuery();
-                    }
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "DeleteRecord | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public List<ComplaintFilesModel> GetClientProfileDataDetails(string module, string param = "normal")
-        {
-            List<ComplaintFilesModel> recordlist = new List<ComplaintFilesModel>();
-
-            try
-            {
-                DataTable datatable = new DataTable();
-
-                switch (module)
-                {
-
-                    case "National_ID":
-                        if (!param.Equals("normal"))
-                            datatable = GetRecordsById("profile_nation_id", Convert.ToInt64(param));
-                        break;
-                    default:
-                        break;
-                }
-
-                foreach (DataRow dr in datatable.Rows)
-                {
-                    recordlist.Add(
-                    new ComplaintFilesModel
-                    {
-                        file_name = Convert.ToString(dr["file_name"])
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                //FileLogHelper.log_message_fields("ERROR", "GetPortalRoles | Exception ->" + ex.Message);
-            }
-
-            return recordlist;
-        }
-
-        public List<ComplaintFilesModel> GetComplaintFiles(string module, string param = "normal")
-        {
-            List<ComplaintFilesModel> recordlist = new List<ComplaintFilesModel>();
-
-            try
-            {
-                DataTable datatable = new DataTable();
-
-                switch (module)
-                {
-
-                    case "complaint_files":
-                        if (!param.Equals("normal"))
-                            datatable = GetRecordsById(module, Convert.ToInt64(param));
-                        break;
-                        default:
-                        break;
-                }
-
-                foreach (DataRow dr in datatable.Rows)
-                {
-                    recordlist.Add(
-                    new ComplaintFilesModel
-                    {
-                        file_number = Convert.ToString(dr["file_number"])
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                //FileLogHelper.log_message_fields("ERROR", "GetPortalRoles | Exception ->" + ex.Message);
-            }
-
-            return recordlist;
-        }
-
-        public List<ComplaintTypeModel> GetComplaintType()
-        {
-            List<ComplaintTypeModel> recordlist = new List<ComplaintTypeModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("complaint_type_record");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new ComplaintTypeModel()
-                    {
-                        id = Convert.ToInt64(dr["id"]),
-                        complaint_name = Convert.ToString(dr["complaint_name"]),
-
-                    });
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-
-        public bool AddComplaintType(ComplaintTypeModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_complaint_type", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@complaint_name", model.complaint_name);
-                 
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-        
-        public bool Addcomplaint_Files(ComplaintFilesModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_complaint_files", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@file_number", model.file_number);
-                    cmd.Parameters.AddWithValue("@file_name", model.file_name);
-                    cmd.Parameters.AddWithValue("@complaint_id", model.complaint_id);
-                 
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public bool UpdateComplaintType(ComplaintTypeModel model)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_complaint_type", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_complaint_name", model.complaint_name);
-
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public List<StatusModel> GetStatus()
-        {
-            List<StatusModel> recordlist = new List<StatusModel>();
-
-            try
-            {
-                DataTable dt = new DataTable();
-                dt = GetRecords("statuses_record");
-
-                foreach (DataRow dr in dt.Rows)
-                {
-
-                    recordlist.Add(
-                    new StatusModel()
-                    {
-                        id = Convert.ToInt64(dr["id"]),
-                        status_name = Convert.ToString(dr["status_name"]),
-
-                    });
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                FileLogHelper.log_message_fields("ERROR", "GetCategoryRecords | Exception ->" + ex.Message);
-
-            }
-            return recordlist;
-        }
-
-        public bool AddStatus(StatusModel model)
-        {
-            try
-            {
-                Int64 i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("add_statuses", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@status_name", model.status_name);
-
-                    cmd.ExecuteNonQuery();
-
-                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
-                }
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "AddCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-        public bool UpdateStatus(StatusModel model)
-        {
-            try
-            {
-                int i = 0;
-                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
-                {
-                    using MySqlCommand cmd = new MySqlCommand("update_statuses", connect);
-                    connect.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@in_id", model.id);
-                    cmd.Parameters.AddWithValue("@in_status_name", model.status_name);
-
-                    i = (int)cmd.ExecuteNonQuery();
-                }
-
-                if (i >= 1)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                FileLogHelper.log_message_fields("ERROR", "UpdateCategory | Exception ->" + ex.Message);
-                return false;
-            }
-        }
-
-
 
         public bool UpdateProfile(Int16 record_id, Int16 profile_id, string attribute, string new_value)
         {
@@ -1585,7 +748,10 @@ namespace ComplaintManagement.Models
                         avatar = Convert.ToString(dr["avatar"]),
                         locked = Convert.ToBoolean(dr["locked"]),
                         google_authenticate = Convert.ToBoolean(dr["google_authenticate"]),
-                        sec_key = Convert.ToString(dr["sec_key"])
+                        sec_key = Convert.ToString(dr["sec_key"]),
+                        user_name = Convert.ToString(dr["user_name"]),
+                        menu_layout = Convert.ToString(dr["menu_layout"]),
+                        role_name = Convert.ToString(dr["role_name"])
                     });
                 }
             }
@@ -1614,10 +780,13 @@ namespace ComplaintManagement.Models
                     cmd.Parameters.AddWithValue("@in_name", mymodel.name);
                     cmd.Parameters.AddWithValue("@in_password", mymodel.password);
                     cmd.Parameters.AddWithValue("@in_avatar", mymodel.avatar);
+                    cmd.Parameters.AddWithValue("@in_balance", mymodel.balance);
+                    cmd.Parameters.AddWithValue("@in_menu_layout", mymodel.menu_layout);
                     cmd.Parameters.AddWithValue("@in_locked", mymodel.locked);
                     cmd.Parameters.AddWithValue("@in_google_authenticate", mymodel.google_authenticate);
                     cmd.Parameters.AddWithValue("@in_created_by", mymodel.created_by);
                     cmd.Parameters.AddWithValue("@in_sec_key", mymodel.sec_key);
+                    cmd.Parameters.AddWithValue("@in_user_name", mymodel.user_name);
 
                     i = (int)cmd.ExecuteNonQuery();
                 }
@@ -1691,6 +860,7 @@ namespace ComplaintManagement.Models
                         mobile = Convert.ToString(dr["mobile"])!,
                         email = Convert.ToString(dr["email"])!,
                         name = Convert.ToString(dr["name"])!,
+                        user_name = Convert.ToString(dr["user_name"])!,
                         password = Convert.ToString(dr["password"])!,
                         avatar = Convert.ToString(dr["avatar"])!,
                         locked = Convert.ToBoolean(dr["locked"]),
@@ -1719,10 +889,12 @@ namespace ComplaintManagement.Models
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
                     cmd.Parameters.AddWithValue("@in_name", model.name);
+                    cmd.Parameters.AddWithValue("@in_user_name", model.user_name);
                     cmd.Parameters.AddWithValue("@in_email", model.email);
                     cmd.Parameters.AddWithValue("@in_password", model.password);
                     cmd.Parameters.AddWithValue("@in_mobile", model.mobile);
                     cmd.Parameters.AddWithValue("@in_avatar", model.avatar);
+                    cmd.Parameters.AddWithValue("@in_menu_layout", model.menu_layout);
                     cmd.Parameters.AddWithValue("@in_locked", model.locked);
                     cmd.Parameters.AddWithValue("@in_sec_key", model.sec_key);
                     cmd.Parameters.AddWithValue("@in_google_authenticate", model.google_authenticate);
@@ -2032,7 +1204,482 @@ namespace ComplaintManagement.Models
             }
         }
         #endregion Reports
-      
+
+        #region Chats
+
+        //Chats
+        public List<ChatModel> GetChat()
+        {
+            List<ChatModel> recordlist = new List<ChatModel>();
+
+            try
+            {
+                DataTable dt = new DataTable();
+
+                dt = GetRecords("chat");
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    recordlist.Add(
+                    new ChatModel
+                    {
+                        id = Convert.ToInt32(dr["id"]),
+                        chatName = Convert.ToString(dr["chatName"]),
+                        sender = Convert.ToString(dr["sender"]),
+                        receiver = Convert.ToString(dr["receiver"]),
+                        latestMessage = Convert.ToString(dr["latestMessage"]),
+                        created_on = Convert.ToDateTime(dr["created_on"]),
+                        updated_at = Convert.ToDateTime(dr["updated_at"])
+
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "GetChatRecords | Exception ->" + ex.Message);
+            }
+
+            return recordlist;
+        }
+
+        public bool AddChat(ChatModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_chat", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@out_id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@in_chatName", model.chatName);
+                    cmd.Parameters.AddWithValue("@in_sender", model.sender);
+                    cmd.Parameters.AddWithValue("@in_receiver", model.receiver);
+                    cmd.Parameters.AddWithValue("@in_latestMessage", model.latestMessage);
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@out_id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddChat | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+        public bool UpdateChat(ChatModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_chat", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@in_chatName", model.chatName);
+                    cmd.Parameters.AddWithValue("@in_sender", model.sender);
+                    cmd.Parameters.AddWithValue("@in_receiver", model.receiver);
+                    cmd.Parameters.AddWithValue("@in_latestMessage", model.latestMessage);
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddChat | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Messages
+
+        //Messages
+        public List<MessageModel> GetMessage()
+        {
+            List<MessageModel> recordlist = new List<MessageModel>();
+
+            try
+            {
+                DataTable dt = new DataTable();
+
+                dt = GetRecords("meaagge");
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    recordlist.Add(
+                    new MessageModel
+                    {
+                        Id = Convert.ToInt32(dr["Id"]),
+                        Sender = Convert.ToInt32(dr["Sender"]),
+                        Content = Convert.ToString(dr["Content"]),
+                        Receiver = Convert.ToInt32(dr["Receiver"]),
+                        Chat = Convert.ToInt32(dr["Chat"]),
+                        ReadBy = dr["ReadBy"].ToString()!.Split(',').Select(int.Parse).ToList()
+
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "GetMessageRecords | Exception ->" + ex.Message);
+            }
+
+            return recordlist;
+        }
+
+        public bool AddMessage(MessageModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_messages", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@out_id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@in_sender", model.Sender);
+                    cmd.Parameters.AddWithValue("@in_content", model.Content);
+                    cmd.Parameters.AddWithValue("@in_receiver", model.Receiver);
+                    cmd.Parameters.AddWithValue("@in_chat", model.Chat);
+                    cmd.Parameters.AddWithValue("@in_readBy", model.ReadBy);
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@out_id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddMessage | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+        public bool UpdateMessage(MessageModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_chat", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    //cmd.Parameters.AddWithValue("@in_chatName", model.chatName);
+                    //cmd.Parameters.AddWithValue("@in_sender", model.sender);
+                    //cmd.Parameters.AddWithValue("@in_receiver", model.receiver);
+                    //cmd.Parameters.AddWithValue("@in_latestMessage", model.latestMessage);
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddChat | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Transactions
+
+        //Transactions
+        public List<TransactionModel> GetTransaction()
+        {
+            List<TransactionModel> recordlist = new List<TransactionModel>();
+
+            try
+            {
+                DataTable dt = new DataTable();
+
+                dt = GetRecords("transactiion");
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    recordlist.Add(
+                    new TransactionModel
+                    {
+                        Id = Convert.ToInt32(dr["Id"]),
+                        TrnxType = (TrnxType)Enum.Parse(typeof(TrnxType), dr["TrnxType"].ToString()!),
+                        Purpose = Convert.ToString(dr["Purpose"]),
+                        Amount = Convert.ToDecimal(dr["Amount"]),
+                        Username = Convert.ToString(dr["Username"]),
+                        Reference = Convert.ToString(dr["Reference"]),
+                        BalanceBefore = Convert.ToDecimal(dr["BalanceBefore"]),
+                        BalanceAfter = Convert.ToDecimal(dr["BalanceAfter"]),
+                        FullNameTransactionEntity = Convert.ToString(dr["FullNameTransactionEntity"]),
+                        Description = Convert.ToString(dr["Description"])
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "GetMessageRecords | Exception ->" + ex.Message);
+            }
+
+            return recordlist;
+        }
+
+        public bool AddTransaction(TransactionModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_transactions", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@out_id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@in_trnxType", model.TrnxType);
+                    cmd.Parameters.AddWithValue("@in_purpose", model.Purpose);
+                    cmd.Parameters.AddWithValue("@in_amount", model.Amount);
+                    cmd.Parameters.AddWithValue("@in_username", model.Username);
+                    cmd.Parameters.AddWithValue("@in_reference", model.Reference);
+                    cmd.Parameters.AddWithValue("@in_balanceBefore", model.BalanceBefore);
+                    cmd.Parameters.AddWithValue("@in_balanceAfter", model.BalanceAfter);
+                    cmd.Parameters.AddWithValue("@in_fullNameTransactionEntity", model.FullNameTransactionEntity);
+                    cmd.Parameters.AddWithValue("@in_description", model.Description);
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@out_id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddMessage | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+        public bool UpdateTransaction(TransactionModel model)
+        {
+            try
+            {
+                Int64 i = 0;
+                using (MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using MySqlCommand cmd = new MySqlCommand("add_chat", connect);
+                    connect.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id", MySqlDbType.Int64).Direction = ParameterDirection.Output;
+                    //cmd.Parameters.AddWithValue("@in_chatName", model.chatName);
+                    //cmd.Parameters.AddWithValue("@in_sender", model.sender);
+                    //cmd.Parameters.AddWithValue("@in_receiver", model.receiver);
+                    //cmd.Parameters.AddWithValue("@in_latestMessage", model.latestMessage);
+                    cmd.ExecuteNonQuery();
+
+                    i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
+                }
+                if (i >= 1)
+                    return true;
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "AddChat | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Transaction Management
+        public MySqlTransaction BeginTransaction()
+        {
+            if (connection.State == ConnectionState.Closed)
+                connection.Open();
+            transaction = connection.BeginTransaction();
+            return transaction;
+        }
+
+        public void CommitTransaction()
+        {
+            transaction?.Commit();
+            connection.Close();
+        }
+
+        public void RollbackTransaction()
+        {
+            transaction?.Rollback();
+            connection.Close();
+        }
+
+        public MySqlCommand CreateCommand(string storedProcedureName)
+        {
+            MySqlCommand cmd = connection.CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = storedProcedureName;
+            if (transaction != null)
+            {
+                cmd.Transaction = transaction;
+            }
+            return cmd;
+        }
+        #endregion
+
+        #region Deposit/UpdateUserBalance
+
+        //UserBalance
+
+        public bool UpdateUserBalance(string email, decimal amount, MySqlTransaction transaction = null!)
+        {
+            try
+            {
+                MySqlCommand cmd = transaction == null ? CreateCommand("update_balance") : new MySqlCommand("update_balance", transaction.Connection, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@username", email);
+                cmd.Parameters.AddWithValue("@amount", amount);
+
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "UpdateUserBalance | Exception ->" + ex.Message);
+                return false;
+            }
+        }
+
+
+        //public bool UpdateUserBalance(string email, decimal amount)
+        //{
+        //    try
+        //    {
+        //        using MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB));
+        //        using MySqlCommand cmd = new MySqlCommand("update_balance", connect);
+        //        connect.Open();
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        cmd.Parameters.AddWithValue("@username", email);
+        //        cmd.Parameters.AddWithValue("@amount", amount);
+        //        cmd.ExecuteNonQuery();
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        FileLogHelper.log_message_fields("ERROR", "UpdateUserBalance | Exception ->" + ex.Message);
+        //        return false;
+        //    }
+        //}
+
+
+        #endregion
+
+        #region WithdrawUserBalance
+        public bool WithdrawUserBalance(string email, decimal amount, out string result, MySqlTransaction transaction = null!)
+        {
+            try
+            {
+                MySqlCommand cmd;
+                if (transaction == null)
+                {
+                    cmd = CreateCommand("withdraw_balance");
+                }
+                else
+                {
+                    cmd = new MySqlCommand("withdraw_balance", transaction.Connection, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                }
+
+                cmd.Parameters.AddWithValue("@username", email);
+                cmd.Parameters.AddWithValue("@amount", amount);
+
+                MySqlParameter resultParam = new MySqlParameter("@result", MySqlDbType.VarChar)
+                {
+                    Direction = ParameterDirection.Output,
+                    Size = 100
+                };
+                cmd.Parameters.Add(resultParam);
+
+                cmd.ExecuteNonQuery();
+
+                result = resultParam.Value.ToString()!;
+                return result == "Success";
+            }
+            catch (Exception ex)
+            {
+                FileLogHelper.log_message_fields("ERROR", "WithdrawUserBalance | Exception ->" + ex.Message);
+                result = "Error";
+                return false;
+            }
+        }
+
+
+        //public bool WithdrawUserBalance(string email, decimal amount, out string result)
+        //{
+        //    try
+        //    {
+        //        using MySqlConnection connect = new MySqlConnection(GetDataBaseConnection(DataBaseObject.HostDB));
+        //        using MySqlCommand cmd = new MySqlCommand("withdraw_balance", connect);
+        //        connect.Open();
+        //        cmd.CommandType = CommandType.StoredProcedure;
+
+        //        // Add input parameters
+        //        cmd.Parameters.AddWithValue("@username", email);
+        //        cmd.Parameters.AddWithValue("@amount", amount);
+
+        //        // Add output parameter
+        //        MySqlParameter resultParam = new MySqlParameter("@result", MySqlDbType.VarChar)
+        //        {
+        //            Direction = ParameterDirection.Output,
+        //            Size = 100
+        //        };
+        //        cmd.Parameters.Add(resultParam);
+
+        //        // Execute the stored procedure
+        //        cmd.ExecuteNonQuery();
+
+        //        // Retrieve the result from the output parameter
+        //        result = resultParam.Value.ToString()!;
+        //        return result == "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        FileLogHelper.log_message_fields("ERROR", "WithdrawUserBalance | Exception ->" + ex.Message);
+        //        result = "Error";
+        //        return false;
+        //    }
+        //}
+        #endregion
+
+
         //Client
         public List<ClientRecordModel> GetClientRecord()
         {

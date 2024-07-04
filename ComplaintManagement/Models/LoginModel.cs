@@ -4,13 +4,9 @@ namespace ComplaintManagement.Models
 {
     public class LoginModel
     {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email Address")]
+        
         public string? email { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
         public string? password { get; set; }
 
         public string? ReturnURL { get; set; }

@@ -1,8 +1,12 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ComplaintManagement.Models
+namespace ComplaintManagement.Models.Models
 {
+    public class RegisterResponseModel
+    {
+        public RegistrationModel? Message { get; set; }
+    }
+
     public class RegistrationModel
     {
         public Int64 id { get; set; }
@@ -15,14 +19,9 @@ namespace ComplaintManagement.Models
         [DataType(DataType.Password)]
         public string? password { get; set; }
         public string? avatar { get; set; }
-
-        public string? menu_layout { get; set; }
         public bool locked { get; set; }
         public string? sec_key { get; set; }
         public bool google_authenticate { get; set; }
         public string? ReturnURL { get; set; }
-        public DateTime created_on { get; set; }
-        public DateTime updated_at { get; set; }
-        public int created_by { get; set; }
     }
 }

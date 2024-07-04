@@ -34,6 +34,10 @@ function GetProfiles() {
     });
 }
 
+
+
+
+
 function GetMenus(profileid) {
     //using jstree
     $('#tree-menu').jstree("destroy");
